@@ -25,5 +25,8 @@ jobs:
             toolchain: '1.40.0'
             override: true
 
+      - name: checkout code
+        uses: actions/checkout@v2
+
       - name: run tests
         run: ./scripts/run_tests.sh ${{ matrix.language }}
