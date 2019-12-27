@@ -13,7 +13,7 @@ jobs:
     steps:
 
       - if: maxtrix.language == "python"
-            uses: actions/setup-python
+          uses: actions/setup-python
 
       - if: maxtrix.language == "rust"
-            uses: actions/rust-toolchain
+          uses: actions/rust-toolchain
