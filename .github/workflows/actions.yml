@@ -14,7 +14,7 @@ jobs:
 
       - name: setup python
         uses: actions/setup-python@v1
-        if: maxtrix.language == "python"
+        if: matrix.language == "python"
 
       - name: setup rust
         uses: actions/rust-toolchain@v1
