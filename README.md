@@ -16,7 +16,7 @@ Ensure that you have a working installation of every language [you see here](htt
 The repo is used like so:
 
 - humans run => the _"test watcher script"_ which runs => the _"test manager script"_ which runs => the _"sort script"_
-- github actions runs => the _"test manager script"_ which runs => the _"sort script"_
+- GitHub actions runs => the _"test manager script"_ which runs => the _"sort script"_
 
 ### test watcher script
 
