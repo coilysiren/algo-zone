@@ -45,7 +45,7 @@ given a language, runs each of that language's scripts on every input
 
 ### sort script
 
-given the name of randomized file and the name of a sorted file, sorts the randomized file in memory and compares that result
+given the name of randomized file and the name of a sorted file, sorts the randomized file in memory and compares that result against the sorted file
 
 #### usage / inputs:
 
