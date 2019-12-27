@@ -12,10 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      - name: Set up python
-        if: maxtrix.language == "python"
-        uses: actions/setup-python
+      - if: maxtrix.language == "python"
+            uses: actions/setup-python
 
-      - name: Set up rust
-        if: maxtrix.language == "rust"
-        uses: actions/rust-toolchain
+      - if: maxtrix.language == "rust"
+            uses: actions/rust-toolchain
