@@ -20,5 +20,5 @@ jobs:
     name: ${{ matrix.language.0 }}
     runs-on: ubuntu-latest
     steps:
-      - name: Set up ${{ matrix.language.0 }}
-        uses: actions/setup-${{ matrix.language.0 }}
+      - name: Set up ${{ matrix.language }}
+        uses: actions/setup-${{ matrix.language }}
