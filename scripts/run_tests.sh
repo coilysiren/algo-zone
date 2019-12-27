@@ -13,14 +13,12 @@ for dataFile in ./data/*; do
   # etc, without including any folder contents
 
   # except for readmes
-  if [[  $dataFile == "*/readme.md" ]]; then continue end
+  if [[  $dataFile == "*/readme.md" ]]; then continue; fi
 
   # sort them with every sort script
-  for sortScript in ./src/$language/sort_*; do
-    $language $sortScript $dataFile"/
+  for sortScript in ./src/"$language"/sort_*; do
+    # use the language to run the sort script with the two data files
+    $language "$sortScript" "$dataFile/randomized.txt" "$dataFile/sorted.txt"
   done
 
-  if dataFile ==
-  echo $dataFile
-  # TODO
 done
