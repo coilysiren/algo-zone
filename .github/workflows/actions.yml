@@ -13,8 +13,9 @@ jobs:
     steps:
 
       - name: setup python
-        uses: actions/setup-python@v1
         if: matrix.language == 'python'
+        uses: actions/setup-python@v1
 
       - name: setup rust
+        if: matrix.language == 'rust'
         uses: actions/rust-toolchain@v1
