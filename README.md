@@ -1,6 +1,6 @@
 # algo-zone
 
-pronounced like "auto zone", a place for lynn to learn to software engineering
+pronounced like "auto zone", a place for figuring out algorithms
 
 ## Usage
 
