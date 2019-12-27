@@ -7,18 +7,15 @@ jobs:
   test:
     strategy:
       matrix:
-        language: [
-          [
-            'python',
-            '3.7',
-          ],
-          [
-            'rust',
-            '1.40.0',
-          ]
-        ]
+        language: [python, rust]
     name: ${{ matrix.language }}
     runs-on: ubuntu-latest
     steps:
-      - name: Set up ${{ matrix.language }}
-        uses: actions/setup-${{ matrix.language }}
+
+      - name: Set up python
+        if: ${{ maxtrix.language }} == python
+        uses: actions/setup-python
+
+      - name: Set up rust
+        if: ${{ maxtrix.language }} == rust
+        uses: actions/rust-toolchain
