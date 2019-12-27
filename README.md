@@ -18,47 +18,47 @@ The repo is used like so:
 - humans run => the _"test watcher script"_ which runs => the _"test manager script"_ which runs => the _"sort script"_
 - GitHub actions runs => the _"test manager script"_ which runs => the _"sort script"_
 
-### test watcher script
+### **test watcher script**
 
 watches your local directory for changes, and runs the tests in every language if changes are detected
 
-#### usage / inputs:
+#### 📥 usage / inputs:
 
 ```
 ./scripts/watch_tests.sh
 ```
 
-### test manager script
+### **test manager script**
 
 given a language, runs each of that language's scripts on every input
 
-#### usage / inputs:
+#### 📥 usage / inputs:
 
 ```
 ./scripts/run_tests.sh $language
 ```
 
-#### outputs:
+#### 🚚 outputs
 
 - exit 0 if everything succeeds
 - exit 1 if there is any failure in any test script
 
-### sort script
+### **sort script**
 
 given the name of randomized file and the name of a sorted file, sorts the randomized file in memory and compares that result against the sorted file
 
-#### usage / inputs:
+#### 📥 usage / inputs:
 
 ```
 ./src/$language/sort_$sortName $randomizedFile $sortedFile
 ```
 
-#### outputs:
+#### 🚚 outputs
 
-- exit 0 if sorted $randomizedFile is the same as $sortedFile
+- exit 0 for success if sorted $randomizedFile is the same as $sortedFile
 - exit 1 otherwise
 
-#### ⚠️ gotchas ⚠️:
+#### ⚠️ gotchas
 
 You should have at least 10x the RAM of the size of the largest file in `data/`. If you have less than that, your computer will OOM probably. _(TODO: very this, for entertainment purposes)_
 
