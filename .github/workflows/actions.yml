@@ -1,0 +1,24 @@
+name: Run Tests
+
+on:
+  [push, pull_request]
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        language: [
+          [
+            'python',
+            '3.7',
+          ],
+          [
+            'rust',
+            '1.40.0',
+          ]
+        ]
+    name: ${{ matrix.language.0 }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up ${{ matrix.language.0 }}
+        uses: actions/setup-${{ matrix.language.0 }}
