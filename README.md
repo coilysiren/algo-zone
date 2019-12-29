@@ -58,10 +58,6 @@ given the name of randomized file and the name of a sorted file, sorts the rando
 - exit 0 for success if sorted $randomizedFile is the same as $sortedFile
 - exit 1 otherwise
 
-#### ⚠️ gotchas
-
-You should have at least 10x the RAM of the size of the largest file in `data/`. If you have less than that, your computer will OOM probably. _(TODO: verify this, for entertainment purposes)_
-
 ## credits
 
 First names from here => https://github.com/dominictarr/random-name/blob/master/first-names.txt
