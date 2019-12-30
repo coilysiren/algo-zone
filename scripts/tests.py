@@ -36,89 +36,93 @@ with open(f"{base_directory}/config.yml", "r") as config_file_object:
 for data_folder_name in os.listdir(f"{base_directory}/data/"):
 
     # expand the data folder name into it's full path
-    data_folder_path = f"{base_directory}/data/{data_folder_name}"
+    data_folder_path = f"./data/{data_folder_name}"
 
     # check if it's a sub-folder containing data, and continue if not
     if not os.path.isdir(data_folder_path):
         continue
 
     # run every sort script
-    for scriptPath in glob.glob(f"{base_directory}/src/{language}/sort_*"):
+    for script_path in glob.glob(f"{base_directory}/src/{language}/sort_*"):
 
         # given "src/python/sort_builtin.py" => split on "/" and return "sort_builtin.py"
-        scriptPathSplitOnSlash = scriptPath.split("/")
-        scriptNameWithFileType = scriptPathSplitOnSlash[-1]
+        script_path_split_on_slash = script_path.split("/")
+        script_name_with_file_type = script_path_split_on_slash[-1]
 
         # given "sort_builtin.py" => split on "." and return "sort_builtin"
-        scriptNameSplitOnDot = scriptNameWithFileType.split(".")
-        scriptName = scriptNameSplitOnDot[0]
+        script_name_split_on_dot = script_name_with_file_type.split(".")
+        script_name = script_name_split_on_dot[0]
 
         # get the path of the file that's been prepared in advance
         # and has the output we would be expecting from out script
         preparedFilePath = f"{data_folder_path}/sorted.txt"
 
         # our scripts write their output files to this path
-        scriptOutputFileName = f"sorted_by_{language}_{scriptName}.txt"
-        scriptOutputFilePath = f"{data_folder_path}/{scriptOutputFileName}"
+        script_output_file_name = f"sorted_by_{language}_{script_name}.txt"
+        script_output_file_path = f"{data_folder_path}/{script_output_file_name}"
 
         # if an old script output file already exists, remove it
-        if os.path.isfile(scriptOutputFilePath):
-            os.remove(scriptOutputFilePath)
+        if os.path.isfile(script_output_file_path):
+            os.remove(script_output_file_path)
 
-        # scriptInvoker is command that we run in a subprocess to invoke our script
+        # script_invoker is command that we run in a subprocess to invoke our script
         # it needs to be split on spaces since subprocess.call excepts a list as input
         # whenever we aren't using the shell=True arguement
-        scriptInvoker = config[language]["scriptInvoker"].split(" ")
+        script_invoker = config[language]["scriptInvoker"].split(" ")
 
-        # scriptToInvoke is the literal script name that we pass to the invoker
-        # we assume that invokers accept paths by default (eg. scriptPath)
-        # and that other invokers want script names (eg. scriptName)
-        # the useShortScriptName config value controls this behavior
+        # script_to_invoke is the literal script name that we pass to the invoker
+        # we assume that invokers accept paths by default (eg. script_path)
+        # and that other invokers want script names (eg. script_name)
+        # the useShortScript_name config value controls this behavior
         if config[language].get("useShortScriptName", False) == False:
-            scriptToInvoke = scriptPath
+            script_to_invoke = f"./src/{language}/{script_name_with_file_type}"
         else:
-            scriptToInvoke = scriptName
+            script_to_invoke = script_name
 
-        # this calls ends up looking like
+        # the latter half of the call ends up looking like
         #   python ./src/python/sort_builtin.py \
         #       ./data/first-names/randomized.txt \
         #       ./data/first-names/sorted_by_python_sort_builtin.txt
-        status = subprocess.call(
-            [
-                *scriptInvoker,
-                scriptToInvoke,
-                f"{data_folder_path}/randomized.txt",
-                scriptOutputFilePath,
-            ]
-        )
+        call_args = [
+            "docker",
+            "run",
+            f"--volume={base_directory}:/workdir",
+            f"-w=/workdir",
+            config[language]["dockerImage"],
+            *script_invoker,
+            script_to_invoke,
+            f"{data_folder_path}/randomized.txt",
+            script_output_file_path,
+        ]
+        status = subprocess.call(call_args)
 
         # check if the script invoke failed
         if status != 0:
             print(
-                f'🔴 script "{scriptName}" failed on data "{data_folder_name}", reason:'
+                f'🔴 script "{script_name}" failed on data "{data_folder_name}", reason:'
             )
             print(f'\t the exit code "{status}" was not 0')
             a_script_has_failed = True
             continue
 
         # check if the output file was created
-        if not os.path.isfile(scriptOutputFilePath):
+        if not os.path.isfile(script_output_file_path):
             print(
-                f'🔴 script "{scriptName}" failed on data "{data_folder_name}", reason:'
+                f'🔴 script "{script_name}" failed on data "{data_folder_name}", reason:'
             )
-            print(f"\t the output {scriptOutputFileName} file was not created")
+            print(f"\t the output {script_output_file_name} file was not created")
             a_script_has_failed = True
             continue
 
         # check if the output file matches the prepared file
-        if filecmp.cmp(preparedFilePath, scriptOutputFilePath):
-            print(f'🟢 script "{scriptName}" succeeded on data "{data_folder_name}"')
+        if filecmp.cmp(preparedFilePath, script_output_file_path):
+            print(f'🟢 script "{script_name}" succeeded on data "{data_folder_name}"')
         else:
             print(
-                f'🔴 script "{scriptName}" failed on data "{data_folder_name}", reason:'
+                f'🔴 script "{script_name}" failed on data "{data_folder_name}", reason:'
             )
             print(
-                f"\t output file {scriptOutputFileName} has does not match the prepared file"
+                f"\t output file {script_output_file_name} has does not match the prepared file"
             )
 
 if a_script_has_failed:

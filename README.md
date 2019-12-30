@@ -5,8 +5,8 @@ pronounced like "auto zone", a place for figuring out algorithms
 ## Installation requirements
 
 - python
-- pipenv (from python)
-- rust
+- pipenv
+- docker
 
 ## Usage
 

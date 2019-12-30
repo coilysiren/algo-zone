@@ -1,9 +1,12 @@
 python:
+  dockerImage: python:3.7
   scriptInvoker: python
 
 rust:
+  dockerImage: rust:1.40
   scriptInvoker: cargo run --manifest-path ./src/rust/Cargo.toml --bin
   useShortScriptName: true
 
 go:
+  dockerImage: golang:1.13
   scriptInvoker: go run
