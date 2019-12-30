@@ -22,7 +22,7 @@ The repo is used like so:
 
 watches your local directory for changes, and runs the tests in every language if changes are detected
 
-#### 📥 usage / inputs:
+#### ⚙️ usage
 
 ```
 ./scripts/watch_tests.sh
@@ -32,9 +32,15 @@ watches your local directory for changes, and runs the tests in every language i
 
 given a language, runs each of that language's scripts on every input
 
-#### 📥 usage / inputs:
+#### ⚙️ usage
 
-- arg 1 - the language to run tests for (optional, default to python)
+```
+./scripts/run_tests.sh $language
+```
+
+#### 📥 inputs
+
+- arg 1 - $language, the language to run tests for (optional, default to python)
 
 #### 🚚 outputs
 
