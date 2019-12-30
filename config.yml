@@ -4,3 +4,6 @@ python:
 rust:
   scriptInvoker: cargo run --manifest-path ./src/rust/Cargo.toml --bin
   useShortScriptName: true
+
+go:
+  scriptInvoker: go run
