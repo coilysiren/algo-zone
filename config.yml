@@ -10,3 +10,7 @@ rust:
 go:
   dockerImage: golang:1.13
   scriptInvoker: go run
+
+ruby:
+  dockerImage: ruby:2.7
+  scriptInvoker: ruby
