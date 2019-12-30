@@ -1,3 +1,3 @@
 # ./src/*
 
-code that is run indirectly
+the source code for our algos
