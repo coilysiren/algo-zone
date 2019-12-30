@@ -73,7 +73,7 @@ for data_folder_name in os.listdir(f"{base_directory}/data/"):
         # script_to_invoke is the literal script name that we pass to the invoker
         # we assume that invokers accept paths by default (eg. script_path)
         # and that other invokers want script names (eg. script_name)
-        # the useShortScript_name config value controls this behavior
+        # the useShortScriptName config value controls this behavior
         if config[language].get("useShortScriptName", False) == False:
             script_to_invoke = f"./src/{language}/{script_name_with_file_type}"
         else:
