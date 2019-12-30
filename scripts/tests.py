@@ -53,6 +53,9 @@ for data_folder_name in os.listdir(f"{base_directory}/data/"):
         script_name_split_on_dot = script_name_with_file_type.split(".")
         script_name = script_name_split_on_dot[0]
 
+        # this path is used in various places later
+        script_relative_path = f"./src/{language}/{script_name_with_file_type}"
+
         # get the path of the file that's been prepared in advance
         # and has the output we would be expecting from out script
         preparedFilePath = f"{data_folder_path}/sorted.txt"
@@ -75,7 +78,7 @@ for data_folder_name in os.listdir(f"{base_directory}/data/"):
         # and that other invokers want script names (eg. script_name)
         # the useShortScriptName config value controls this behavior
         if config[language].get("useShortScriptName", False) == False:
-            script_to_invoke = f"./src/{language}/{script_name_with_file_type}"
+            script_to_invoke = script_relative_path
         else:
             script_to_invoke = script_name
 
@@ -99,7 +102,7 @@ for data_folder_name in os.listdir(f"{base_directory}/data/"):
         # check if the script invoke failed
         if status != 0:
             print(
-                f'🔴 script "{script_name}" failed on data "{data_folder_name}", reason:'
+                f'🔴 script "{script_relative_path}" failed on data "{data_folder_name}", reason:'
             )
             print(f'\t the exit code "{status}" was not 0')
             a_script_has_failed = True
@@ -108,7 +111,7 @@ for data_folder_name in os.listdir(f"{base_directory}/data/"):
         # check if the output file was created
         if not os.path.isfile(script_output_file_path):
             print(
-                f'🔴 script "{script_name}" failed on data "{data_folder_name}", reason:'
+                f'🔴 script "{script_relative_path}" failed on data "{data_folder_name}", reason:'
             )
             print(f"\t the output {script_output_file_name} file was not created")
             a_script_has_failed = True
@@ -116,10 +119,12 @@ for data_folder_name in os.listdir(f"{base_directory}/data/"):
 
         # check if the output file matches the prepared file
         if filecmp.cmp(preparedFilePath, script_output_file_path):
-            print(f'🟢 script "{script_name}" succeeded on data "{data_folder_name}"')
+            print(
+                f'🟢 script "{script_relative_path}" succeeded on data "{data_folder_name}"'
+            )
         else:
             print(
-                f'🔴 script "{script_name}" failed on data "{data_folder_name}", reason:'
+                f'🔴 script "{script_relative_path}" failed on data "{data_folder_name}", reason:'
             )
             print(
                 f"\t output file {script_output_file_name} has does not match the prepared file"
