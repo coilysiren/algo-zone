@@ -28,7 +28,7 @@ given a language, runs each of that language's scripts on every input
 
 #### 📥 inputs
 
-- arg 1 - $language, the language to run tests for (optional, default to python)
+- arg 1 - $language, the language to run tests for (optional, defaults to python)
 
 #### 🚚 outputs
 
