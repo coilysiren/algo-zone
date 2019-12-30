@@ -13,8 +13,8 @@ aScriptHasFailed="false"
 # tragedies
 baseDirectory=$PWD
 
-# get the executable name for this language
-executableName=$(< "./src/$language/executable_name.txt")
+# get the script invoker command for this language
+scriptInvoker=$(< "./src/$language/script_invoker.txt")
 
 # for everything in the data folder
 for baseDataFilePath in ./data/*; do
@@ -57,7 +57,7 @@ for baseDataFilePath in ./data/*; do
 
     # use the language executable to run the script with the two file paths as arguments
     set +e # dont exit if the language script errors
-    $executableName "$script" "$randomDataFilePath" "$scriptOutputDataFilePath"
+    $scriptInvoker "$script" "$randomDataFilePath" "$scriptOutputDataFilePath"
 
     # check to see if our script exited successfully
     scriptExitCode=$?
