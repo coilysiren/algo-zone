@@ -16,7 +16,6 @@ jobs:
     steps:
 
       - name: setup python
-        if: matrix.language == 'python'
         uses: actions/setup-python@v1
         with:
           python-version: '3.7'
@@ -30,6 +29,9 @@ jobs:
 
       - name: checkout code
         uses: actions/checkout@v2
+
+      - name: install prereqs
+        run: pip install pipenv
 
       - name: run tests
         run: pipenv run tests ${{ matrix.language }}
