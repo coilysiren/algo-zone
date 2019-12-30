@@ -5,10 +5,7 @@ var fs = require('fs');
 /////////////////////
 
 let inputFilePath = process.argv[2];
-let inputString;
-try {
-  inputString = fs.readFileSync(inputFilePath, 'utf8');
-} catch (err) { throw err }
+let inputString = fs.readFileSync(inputFilePath, 'utf8');
 let inputStringSplit = inputString.split(/\n/);
 
 ////////////////
@@ -28,6 +25,4 @@ inputStringSplit.sort();
 let outputFilePath = process.argv[3];
 let outputString = inputStringSplit.join("\n");
 outputString += "\n"; // trailing newline
-try {
-  fs.writeFileSync(outputFilePath, outputString);
-} catch (err) { throw err }
+fs.writeFileSync(outputFilePath, outputString);
