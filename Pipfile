@@ -1,0 +1,10 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[scripts]
+tests = "python ./scripts/tests.py"
+
+[packages]
+pyyaml = "*"

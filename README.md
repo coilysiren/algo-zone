@@ -2,33 +2,19 @@
 
 pronounced like "auto zone", a place for figuring out algorithms
 
+## Installation requirements
+
+- python
+- pipenv (from python)
+- rust
+
 ## Usage
 
-Ensure that you have a working installation of every language [you see here](https://github.com/lynncyrin/algo-zone/tree/master/src), and then run
-
 ```
-# in bash
-./scripts/watch_tests.sh
+pipenv run tests
 ```
 
-## APIs
-
-The repo is used like so:
-
-- humans run => the _"test watcher script"_ which runs => the _"test manager script"_ which runs => the _"sort script"_
-- GitHub actions runs => the _"test manager script"_ which runs => the _"sort script"_
-
-### **test watcher script**
-
-🚧 this script hasn't been created yet 🚧
-
-watches your local directory for changes, and runs the tests in every language if changes are detected
-
-#### ⚙️ usage
-
-```
-./scripts/watch_tests.sh
-```
+## Interface docs
 
 ### **test manager script**
 
