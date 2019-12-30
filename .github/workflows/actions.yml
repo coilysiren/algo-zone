@@ -32,5 +32,4 @@ jobs:
         uses: actions/checkout@v2
 
       - name: run tests
-        if: matrix.language == 'python'
         run: ./scripts/run_tests.sh ${{ matrix.language }}

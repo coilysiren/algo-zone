@@ -13,6 +13,9 @@ aScriptHasFailed="false"
 # tragedies
 baseDirectory=$PWD
 
+# get the executable name for this language
+executableName=$(< "./src/$language/executable_name.txt")
+
 # for everything in the data folder
 for baseDataFilePath in ./data/*; do
   # results come out looking like
@@ -32,14 +35,14 @@ for baseDataFilePath in ./data/*; do
   expectedOutputData=$(< "$expectedOutputDataPath")
 
   # sort with every sort script
-  for sortScript in ./src/"$language"/sort_*; do
+  for script in ./src/"$language"/sort_*; do
 
     # cleanup the script name, for later use as a file name
     #   - the 1st sed removes "./src/"
     #   - the 2nd sed turns "/" into "_"
     #   - the 3rd sed turns "." into "_"
     # result "./src/python/sort_builtin.py" => "python_sort_builtin_py"
-    scriptName=$(echo "$sortScript" \
+    scriptName=$(echo "$script" \
       | sed "s/\.\/src\///" \
       | sed "s/\//_/" \
       | sed "s/\./_/" \
@@ -52,15 +55,15 @@ for baseDataFilePath in ./data/*; do
     # if an old script output file already exists, remove it
     rm -f "$scriptOutputDataFilePath"
 
-    # use the language to run the sort script with the two file paths as arguments
+    # use the language executable to run the script with the two file paths as arguments
     set +e # dont exit if the language script errors
-    $language "$sortScript" "$randomDataFilePath" "$scriptOutputDataFilePath"
+    $executableName "$script" "$randomDataFilePath" "$scriptOutputDataFilePath"
 
     # check to see if our script exited successfully
     scriptExitCode=$?
     if [[ "$scriptExitCode" != 0 ]]; then
         aScriptHasFailed="true"
-        echo "🔴 script $sortScript failed, reason:"
+        echo "🔴 script $script failed, reason:"
         echo "   the exit code \"$scriptExitCode\" was not 0"
         continue
     fi
@@ -69,7 +72,7 @@ for baseDataFilePath in ./data/*; do
     # check to see if our script wrote to the data file path
     if [[ ! -f "$scriptOutputDataFilePath" ]]; then
         aScriptHasFailed="true"
-        echo "🔴 script $sortScript failed, reason:"
+        echo "🔴 script $script failed, reason:"
         echo "   no output file created, the script likely has an error"
         continue
     fi
@@ -79,10 +82,10 @@ for baseDataFilePath in ./data/*; do
 
     # compare the script sorted data with the expected sorted data
     if [[ "$scriptOutputData" == "$expectedOutputData" ]]; then
-      echo "🟢 script $sortScript succeeded"
+      echo "🟢 script $script succeeded"
     else
       aScriptHasFailed="true"
-      echo "🔴 script $sortScript failed, reason:"
+      echo "🔴 script $script failed, reason:"
       echo "   output file $scriptOutputDataFileName has incorrect contents"
       echo "   displaying file diff for $expectedOutputDataFileName vs $scriptOutputDataFileName"
       set +e # ignore exit code from the diff command
