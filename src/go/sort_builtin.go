@@ -36,11 +36,13 @@ func main() {
 	// write output file //
 	///////////////////////
 
-	var outputString string
-	for _, line := range inputFileStringSlice[1:] {
-		outputString += line
-		outputString += "\n"
+	outputString := strings.Join(inputFileStringSlice, "\n")
+	// join adds a leading \n entry, which needs to be removed
+	if outputString[0:1] == "\n" {
+		outputString = outputString[1:]
 	}
+	// add trailing \n
+	outputString += "\n"
 	outputBytes := []byte(outputString)
 	ouputFilePath := os.Args[2]
 	err = ioutil.WriteFile(ouputFilePath, outputBytes, 0644)
