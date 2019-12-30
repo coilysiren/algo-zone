@@ -10,7 +10,7 @@ jobs:
   test:
     strategy:
       matrix:
-        language: [python, rust, go, ruby]
+        language: [python, rust, go, ruby, js]
     name: ${{ matrix.language }}
     runs-on: ubuntu-latest
     steps:
