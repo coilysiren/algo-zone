@@ -1,4 +1,7 @@
 fn main() {
+    // read input file
+    // sort input
+    // write output file
     let mut vec = vec![1, 5, 10, 2, 15];
 
     vec.sort();

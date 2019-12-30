@@ -11,7 +11,7 @@ pronounced like "auto zone", a place for figuring out algorithms
 ## Usage
 
 ```
-pipenv run tests
+pipenv sync && pipenv run tests
 ```
 
 ## Interface docs
