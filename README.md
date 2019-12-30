@@ -23,7 +23,7 @@ given a language, runs each of that language's scripts on every input
 #### ⚙️ usage
 
 ```
-./scripts/run_tests.sh $language
+pipenv run tests $language
 ```
 
 #### 📥 inputs
