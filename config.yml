@@ -14,3 +14,7 @@ go:
 ruby:
   dockerImage: ruby:2.7
   scriptInvoker: ruby
+
+js:
+  dockerImage: node:13.5
+  scriptInvoker: node
