@@ -97,8 +97,8 @@ done
 # check to see if any script has failed
 if [[ $aScriptHasFailed == "false" ]]; then
   echo "✨ all scripts succeeded ✨"
-  exit 1
+  exit 0
 else
   echo "🚨 a script failed! 🚨"
-  exit 0
+  exit 1
 fi
