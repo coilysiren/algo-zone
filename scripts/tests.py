@@ -1,4 +1,5 @@
 # builtin packages
+import filecmp
 import glob
 import os
 import string
@@ -16,7 +17,7 @@ else:
 
 # at the beginning, we assume no script has failed
 # at the end, we check if any script has failed
-aScriptHasFailed = False
+a_script_has_failed = False
 
 # the base directory is prepended to the path that
 # we give to our scripts, to prevent unfortunate path tragedies
@@ -32,12 +33,13 @@ with open(f"{base_directory}/config.yml", "r") as config_file_object:
     # of this script. so we opt for the short `config` instead.
 
 # for everything in the data folder
-for data_folder in [
-    f"{base_directory}/data/{name}" for name in os.listdir(f"{base_directory}/data/")
-]:
+for data_folder_name in os.listdir(f"{base_directory}/data/"):
+
+    # expand the data folder name into it's full path
+    data_folder_path = f"{base_directory}/data/{data_folder_name}"
 
     # check if it's a sub-folder containing data, and continue if not
-    if not os.path.isdir(data_folder):
+    if not os.path.isdir(data_folder_path):
         continue
 
     # run every sort script
@@ -51,8 +53,13 @@ for data_folder in [
         scriptNameSplitOnDot = scriptNameWithFileType.split(".")
         scriptName = scriptNameSplitOnDot[0]
 
+        # get the path of the file that's been prepared in advance
+        # and has the output we would be expecting from out script
+        preparedFilePath = f"{data_folder_path}/sorted.txt"
+
         # our scripts write their output files to this path
-        scriptOutputFilePath = f"{data_folder}/sorted_by_{language}_{scriptName}.txt"
+        scriptOutputFileName = f"sorted_by_{language}_{scriptName}.txt"
+        scriptOutputFilePath = f"{data_folder_path}/{scriptOutputFileName}"
 
         # if an old script output file already exists, remove it
         if os.path.isfile(scriptOutputFilePath):
@@ -60,7 +67,7 @@ for data_folder in [
 
         # scriptInvoker is command that we run in a subprocess to invoke our script
         # it needs to be split on spaces since subprocess.call excepts a list as input
-        # when we aren't using shell=True
+        # whenever we aren't using the shell=True arguement
         scriptInvoker = config[language]["scriptInvoker"].split(" ")
 
         # scriptToInvoke is the literal script name that we pass to the invoker
@@ -76,81 +83,47 @@ for data_folder in [
         #   python ./src/python/sort_builtin.py \
         #       ./data/first-names/randomized.txt \
         #       ./data/first-names/sorted_by_python_sort_builtin.txt
-        subprocess.call(
+        status = subprocess.call(
             [
                 *scriptInvoker,
                 scriptToInvoke,
-                f"{data_folder}/randomized.txt",
+                f"{data_folder_path}/randomized.txt",
                 scriptOutputFilePath,
             ]
         )
 
-#         scriptName = string.replace(scriptName, "./")
+        # check if the script invoke failed
+        if status != 0:
+            print(
+                f'🔴 script "{scriptName}" failed on data "{data_folder_name}", reason:'
+            )
+            print(f'\t the exit code "{status}" was not 0')
+            a_script_has_failed = True
+            continue
 
-#     # cleanup the script name, for later use as a file name
-#     #   - the 1st sed removes "./src/"
-#     #   - the 2nd sed turns "/" into "_"
-#     #   - the 3rd sed turns "." into "_"
-#     # result "./src/python/sort_builtin.py" => "python_sort_builtin_py"
-#     scriptName=$(echo "$script" \
-#       | sed "s/\.\/src\///" \
-#       | sed "s/\//_/" \
-#       | sed "s/\./_/" \
-#     )
+        # check if the output file was created
+        if not os.path.isfile(scriptOutputFilePath):
+            print(
+                f'🔴 script "{scriptName}" failed on data "{data_folder_name}", reason:'
+            )
+            print(f"\t the output {scriptOutputFileName} file was not created")
+            a_script_has_failed = True
+            continue
 
-#     # get the full path for the script output data
-#     scriptOutputDataFileName="sorted_by_$scriptName.txt"
-#     scriptOutputDataFilePath="$baseDirectory/./$baseDataFilePath/$scriptOutputDataFileName"
+        # check if the output file matches the prepared file
+        if filecmp.cmp(preparedFilePath, scriptOutputFilePath):
+            print(f'🟢 script "{scriptName}" succeeded on data "{data_folder_name}"')
+        else:
+            print(
+                f'🔴 script "{scriptName}" failed on data "{data_folder_name}", reason:'
+            )
+            print(
+                f"\t output file {scriptOutputFileName} has does not match the prepared file"
+            )
 
-#     rm -f "$scriptOutputDataFilePath"
-
-#     # use the language executable to run the script with the two file paths as arguments
-#     set +e # dont exit if the language script errors
-#     $scriptInvoker "$script" "$randomDataFilePath" "$scriptOutputDataFilePath"
-
-#     # check to see if our script exited successfully
-#     scriptExitCode=$?
-#     if [[ "$scriptExitCode" != 0 ]]; then
-#         aScriptHasFailed="true"
-#         echo "🔴 script $script failed, reason:"
-#         echo "   the exit code \"$scriptExitCode\" was not 0"
-#         continue
-#     fi
-#     set -e # re-enable exiting on unknown errors
-
-#     # check to see if our script wrote to the data file path
-#     if [[ ! -f "$scriptOutputDataFilePath" ]]; then
-#         aScriptHasFailed="true"
-#         echo "🔴 script $script failed, reason:"
-#         echo "   no output file created, the script likely has an error"
-#         continue
-#     fi
-
-#     # load the script sorted data into a variable, for comparison
-#     scriptOutputData=$(< "$scriptOutputDataFilePath")
-
-#     # compare the script sorted data with the expected sorted data
-#     if [[ "$scriptOutputData" == "$expectedOutputData" ]]; then
-#       echo "🟢 script $script succeeded"
-#     else
-#       aScriptHasFailed="true"
-#       echo "🔴 script $script failed, reason:"
-#       echo "   output file $scriptOutputDataFileName has incorrect contents"
-#       echo "   displaying file diff for $expectedOutputDataFileName vs $scriptOutputDataFileName"
-#       set +e # ignore exit code from the diff command
-#       diff -d "$expectedOutputDataPath" "$scriptOutputDataFilePath"
-#       set -e # re-enable exiting on unknown errors
-#     fi
-
-#   done
-
-# done
-
-# # check to see if any script has failed
-# if [[ $aScriptHasFailed == "false" ]]; then
-#   echo "✨ all scripts succeeded ✨"
-#   exit 0
-# else
-#   echo "🚨 a script failed! 🚨"
-#   exit 1
-# fi
+if a_script_has_failed:
+    print("🚨 a script failed! 🚨")
+    sys.exit(1)
+else:
+    print("✨ all scripts succeeded ✨")
+    sys.exit(0)
