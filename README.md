@@ -20,6 +20,8 @@ The repo is used like so:
 
 ### **test watcher script**
 
+🚧 this script hasn't been created yet 🚧
+
 watches your local directory for changes, and runs the tests in every language if changes are detected
 
 #### ⚙️ usage
