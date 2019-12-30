@@ -9,14 +9,23 @@ fn main() -> Result<(), Box<dyn std::error::Error + 'static>> {
     let input_file_path = &args[1];
     let output_file_path = &args[2];
 
-    // read input file
+    /////////////////////
+    // read input file //
+    /////////////////////
+
     let input_data_string: String = fs::read_to_string(input_file_path)?;
     let mut input_data_vec: Vec<&str> = input_data_string.lines().collect();
 
-    // sort input
+    ////////////////
+    // sort input //
+    ////////////////
+
     input_data_vec.sort();
 
-    // write output file
+    ///////////////////////
+    // write output file //
+    ///////////////////////
+
     let mut output_data_string: String = String::new();
     for input_data_item in input_data_vec {
         output_data_string.push_str(input_data_item);
