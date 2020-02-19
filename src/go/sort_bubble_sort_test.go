@@ -12,10 +12,47 @@ import (
 	"log"
 	"os"
 	"path"
-	"sort"
 	"strings"
 	"testing"
 )
+
+// bubble_sort is the top level function responsible for ... bubble sorting!
+func bubbleSort(inputList []string) (outputList []string) {
+	// setup defaults
+	outputList = inputList
+	isSorted := false
+
+	// continuously do sorting rounds as long as the list remains unsorted
+	for isSorted == false {
+		outputList, isSorted = doSortingRound(outputList)
+	}
+
+	return outputList
+}
+
+// doSortingRound does the "actual sorting"
+func doSortingRound(inputList []string) (outputList []string, isSorted bool) {
+	isSorted = true
+
+	for index, element := range inputList {
+		if index == 0 {
+			// we compare (index VS index - 1) so theres
+			// nothing to compare when looking at the 0th index
+			outputList = []string{element}
+		} else if element < inputList[index-1] {
+			// if this element is less than the previous element then swap their order
+			visitedElements := outputList[:index-1]
+			previousElement := inputList[index-1]
+			outputList = append(visitedElements, element, previousElement)
+			isSorted = false
+		} else {
+			// otherwise append
+			outputList = append(outputList, element)
+		}
+	}
+
+	return outputList, isSorted
+}
 
 func TestBubbleSort(t *testing.T) {
 
@@ -46,13 +83,13 @@ func TestBubbleSort(t *testing.T) {
 	if inputFileStringSlice[len(inputFileStringSlice)-1] == "" {
 		inputFileStringSlice = inputFileStringSlice[:len(inputFileStringSlice)]
 	}
-	sort.Strings(inputFileStringSlice)
+	sortedSlice := bubbleSort(inputFileStringSlice)
 
 	///////////////////////
 	// write output file //
 	///////////////////////
 
-	outputString := strings.Join(inputFileStringSlice, "\n")
+	outputString := strings.Join(sortedSlice, "\n")
 	// join adds a leading \n entry, which needs to be removed
 	if outputString[0:1] == "\n" {
 		outputString = outputString[1:]
