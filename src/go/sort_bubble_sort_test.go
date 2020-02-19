@@ -41,7 +41,7 @@ func doSortingRound(inputList []string) (outputList []string, isSorted bool) {
 			outputList = []string{element}
 		} else if element < inputList[index-1] {
 			// if this element is less than the previous element then swap their order
-			visitedElements := outputList[:index-1]
+			visitedElements := outputList[:index]
 			previousElement := inputList[index-1]
 			outputList = append(visitedElements, element, previousElement)
 			isSorted = false
