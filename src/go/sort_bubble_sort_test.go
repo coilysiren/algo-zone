@@ -43,6 +43,12 @@ func doSortingRound(inputList []string) (outputList []string, isSorted bool) {
 			// if this element is less than the previous element then swap their order
 			visitedElements := outputList[:index-1]
 			previousElement := outputList[index-1]
+			// append a list of
+			//  - all the list elements we've visited already
+			//  - the current element
+			// 	- the previous element
+			// which has the effect of swapping the order of the current and previous
+			// elements, while also keeping all of the visited elements in place
 			outputList = append(visitedElements, element, previousElement)
 			isSorted = false
 		} else {
