@@ -1,20 +1,29 @@
-package main
+package algozone
 
 import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path"
 	"sort"
 	"strings"
+	"testing"
 )
 
-func main() {
+func TestBuiltinSort(t *testing.T) {
+
+	// setup
+	workingDirectory, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err)
+	}
+	inputFilePath := path.Join(workingDirectory, "../../", os.Getenv("INPUT_PATH"))
+	ouputFilePath := path.Join(workingDirectory, "../../", os.Getenv("OUTPUT_PATH"))
 
 	/////////////////////
 	// read input file //
 	/////////////////////
 
-	inputFilePath := os.Args[1]
 	inputFileBytes, err := ioutil.ReadFile(inputFilePath)
 	if err != nil {
 		log.Fatal(err)
@@ -44,9 +53,10 @@ func main() {
 	// add trailing \n
 	outputString += "\n"
 	outputBytes := []byte(outputString)
-	ouputFilePath := os.Args[2]
+
 	err = ioutil.WriteFile(ouputFilePath, outputBytes, 0644)
 	if err != nil {
 		log.Fatal(err)
 	}
+
 }

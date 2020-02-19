@@ -5,9 +5,8 @@ use std::io::Write;
 
 fn main() -> Result<(), Box<dyn std::error::Error + 'static>> {
     // setup
-    let args: Vec<String> = env::args().collect();
-    let input_file_path = &args[1];
-    let output_file_path = &args[2];
+    let input_file_path = env::var("INPUT_PATH").unwrap();
+    let output_file_path = env::var("OUTPUT_PATH").unwrap();
 
     /////////////////////
     // read input file //
