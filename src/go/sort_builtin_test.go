@@ -15,7 +15,7 @@ func TestBuiltinSort(t *testing.T) {
 	// read input file //
 	/////////////////////
 
-	inputFilePath := os.Args[1]
+	inputFilePath := os.Getenv("INPUT_PATH")
 	inputFileBytes, err := ioutil.ReadFile(inputFilePath)
 	if err != nil {
 		log.Fatal(err)
@@ -45,7 +45,8 @@ func TestBuiltinSort(t *testing.T) {
 	// add trailing \n
 	outputString += "\n"
 	outputBytes := []byte(outputString)
-	ouputFilePath := os.Args[2]
+
+	ouputFilePath := os.Getenv("OUTPUT_PATH")
 	err = ioutil.WriteFile(ouputFilePath, outputBytes, 0644)
 	if err != nil {
 		log.Fatal(err)
