@@ -1,18 +1,6 @@
-// bubble sort!
-//
-// docs: https://en.wikipedia.org/wiki/Bubble_sort
-//
-// bubble sort steps through a list, comparing adjacent elements and swapping them if they are in the wrong order
-// it passes through the list repeatedly until the list is sorted
-
 package algozone
 
 import (
-	"io/ioutil"
-	"log"
-	"os"
-	"path"
-	"strings"
 	"testing"
 )
 
@@ -20,9 +8,12 @@ import (
 // sort script start //
 ///////////////////////
 
-func init() {
-	thisSortScript = bubbleSort
-}
+// bubble sort!
+//
+// docs: https://en.wikipedia.org/wiki/Bubble_sort
+//
+// bubble sort steps through a list, comparing adjacent elements and swapping them if they are in the wrong order
+// it passes through the list repeatedly until the list is sorted
 
 // bubble_sort is the top level function responsible for ... bubble sorting!
 func bubbleSort(inputList []string) (outputList []string) {
@@ -73,44 +64,9 @@ func doSortingRound(inputList []string) (outputList []string, isSorted bool) {
 /////////////////////
 
 func TestBubbleSort(t *testing.T) {
-
-	// setup
-	workingDirectory, err := os.Getwd()
-	if err != nil {
-		log.Fatal(err)
-	}
-	inputFilePath := path.Join(workingDirectory, "../../", os.Getenv("INPUT_PATH"))
-	ouputFilePath := path.Join(workingDirectory, "../../", os.Getenv("OUTPUT_PATH"))
-
-	// read input file
-	inputFileBytes, err := ioutil.ReadFile(inputFilePath)
-	if err != nil {
-		log.Fatal(err)
-	}
-	inputFileString := string(inputFileBytes)
-	inputFileStringSlice := strings.Split(inputFileString, "\n")
-
-	// clean input data
-	if inputFileStringSlice[len(inputFileStringSlice)-1] == "" {
-		inputFileStringSlice = inputFileStringSlice[:len(inputFileStringSlice)]
-	}
-
-	// do sorting
-	sortedData := thisSortScript(inputFileStringSlice)
-
-	// write output file
-	outputString := strings.Join(sortedData, "\n")
-	// join adds a leading \n entry, which needs to be removed
-	if outputString[0:1] == "\n" {
-		outputString = outputString[1:]
-	}
-	// add trailing \n
-	outputString += "\n"
-	outputBytes := []byte(outputString)
-	// write file finally
-	err = ioutil.WriteFile(ouputFilePath, outputBytes, 0644)
-	if err != nil {
-		log.Fatal(err)
-	}
-
+	inputList := getInputList()
+	outputList := bubbleSort(inputList)
+	writeOutputList(outputList)
 }
+
+// ☝🏽 per-script helpers

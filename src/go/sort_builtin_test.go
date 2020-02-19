@@ -20,15 +20,17 @@ func doBuiltinSort(inputList []string) (outputList []string) {
 	return outputList
 }
 
+/////////////////////
+// sort script end //
+/////////////////////
+
 func TestBuiltinSort(t *testing.T) {
 	inputList := getInputList()
 	outputList := doBuiltinSort(inputList)
 	writeOutputList(outputList)
 }
 
-/////////////////////
-// sort script end //
-/////////////////////
+// ☝🏽 per-script helpers
 
 func getInputList() (inputList []string) {
 	// setup
