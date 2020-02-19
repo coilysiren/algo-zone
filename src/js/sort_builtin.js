@@ -4,7 +4,7 @@ var fs = require('fs');
 // read input file //
 /////////////////////
 
-let inputFilePath = process.argv[2];
+let inputFilePath = process.env.INPUT_PATH;
 let inputString = fs.readFileSync(inputFilePath, 'utf8');
 let inputStringSplit = inputString.split(/\n/);
 
@@ -22,7 +22,7 @@ inputStringSplit.sort();
 // write output file //
 ///////////////////////
 
-let outputFilePath = process.argv[3];
+let outputFilePath = process.env.OUTPUT_PATH;
 let outputString = inputStringSplit.join("\n");
 outputString += "\n"; // trailing newline
 fs.writeFileSync(outputFilePath, outputString);
