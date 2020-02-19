@@ -11,6 +11,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path"
 	"sort"
 	"strings"
 	"testing"
@@ -18,11 +19,18 @@ import (
 
 func TestBubbleSort(t *testing.T) {
 
+	// setup
+	workingDirectory, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err)
+	}
+	inputFilePath := path.Join(workingDirectory, "../../", os.Getenv("INPUT_PATH"))
+	ouputFilePath := path.Join(workingDirectory, "../../", os.Getenv("OUTPUT_PATH"))
+
 	/////////////////////
 	// read input file //
 	/////////////////////
 
-	inputFilePath := os.Getenv("INPUT_PATH")
 	inputFileBytes, err := ioutil.ReadFile(inputFilePath)
 	if err != nil {
 		log.Fatal(err)
@@ -53,7 +61,6 @@ func TestBubbleSort(t *testing.T) {
 	outputString += "\n"
 	outputBytes := []byte(outputString)
 
-	ouputFilePath := os.Getenv("OUTPUT_PATH")
 	err = ioutil.WriteFile(ouputFilePath, outputBytes, 0644)
 	if err != nil {
 		log.Fatal(err)
