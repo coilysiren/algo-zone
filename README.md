@@ -10,40 +10,21 @@ pronounced like "auto zone", a place for figuring out algorithms
 
 ## Usage
 
+Run this once
+
+```bash
+pipenv sync
 ```
-pipenv sync && pipenv run tests
-```
 
-## Interface docs
+Then run any of these as many times as you want
 
-### **test manager script**
+```bash
+# 1st example
+pipenv run tests
 
-given a language, runs each of that language's scripts on every input
-
-#### ⚙️ usage
-
-```
+# 2nd example
 pipenv run tests $language
+
+# 3rd example
+pipenv run tests rust
 ```
-
-#### 📥 inputs
-
-- arg 1 - $language, the language to run tests for (optional, defaults to python)
-
-#### 🚚 outputs
-
-- exit 0 if everything succeeds
-- exit 1 if there is any failure in any test script
-
-### **sort scripts**
-
-given the name of randomized file and the name of a sorted file, sorts the randomized file in memory and compares that result against the sorted file
-
-#### 📥 inputs
-
-- arg 1 - the path to a randomized file
-- arg 2 - the path to write the script output file
-
-## credits
-
-First names from here => https://github.com/dominictarr/random-name/blob/master/first-names.txt

@@ -83,21 +83,21 @@ for data_folder_name in os.listdir(f"{base_directory}/data/"):
             script_to_invoke = script_name
 
         # the latter half of the call ends up looking like
-        #   python ./src/python/sort_builtin.py \
-        #       ./data/first-names/randomized.txt \
-        #       ./data/first-names/sorted_by_python_sort_builtin.txt
+        #   python ./src/python/sort_builtin.py
         call_args = [
             "docker",
             "run",
             f"--volume={base_directory}:/workdir",
             f"-w=/workdir",
+            f"-e=INPUT_PATH={data_folder_path}/randomized.txt",
+            f"-e=OUTPUT_PATH={script_output_file_path}",
             config[language]["dockerImage"],
             *script_invoker,
             script_to_invoke,
-            f"{data_folder_path}/randomized.txt",
-            script_output_file_path,
         ]
         status = subprocess.call(call_args)
+
+        # go test -test.run=TestStuff
 
         # check if the script invoke failed
         if status != 0:

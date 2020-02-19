@@ -1,10 +1,11 @@
+import os
 import sys
 
 ###################
 # read input file #
 ###################
 
-inputFilePath = sys.argv[1]
+inputFilePath = os.getenv("INPUT_PATH")
 with open(inputFilePath, "r") as inputFileObject:
     inputFileData = inputFileObject.readlines()
 
@@ -18,6 +19,6 @@ sortedData = sorted(inputFileData)
 # write output file #
 #####################
 
-outputFilePath = sys.argv[2]
+outputFilePath = os.getenv("OUTPUT_PATH")
 with open(outputFilePath, "w") as outputFileObject:
     outputFileObject.writelines(sortedData)

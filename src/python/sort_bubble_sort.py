@@ -6,6 +6,7 @@
 # it passes through the list repeatedly until the list is sorted
 
 
+import os
 import sys
 from typing import List
 
@@ -15,7 +16,7 @@ from typing import List
 ###################
 
 
-inputFilePath = sys.argv[1]
+inputFilePath = os.getenv("INPUT_PATH")
 with open(inputFilePath, "r") as inputFileObject:
     inputFileData = inputFileObject.readlines()
 
@@ -91,7 +92,7 @@ sortedData = bubble_sort(inputFileData)
 #####################
 
 
-outputFilePath = sys.argv[2]
+outputFilePath = os.getenv("OUTPUT_PATH")
 with open(outputFilePath, "w") as outputFileObject:
     for element in sortedData:
         outputFileObject.write(element + "\n")
