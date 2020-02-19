@@ -80,15 +80,15 @@ func TestBubbleSort(t *testing.T) {
 	}
 	inputFileString := string(inputFileBytes)
 	inputFileStringSlice := strings.Split(inputFileString, "\n")
+	// drop the trailing newline, so that it doesn't get included in the sort
+	if inputFileStringSlice[len(inputFileStringSlice)-1] == "" {
+		inputFileStringSlice = inputFileStringSlice[:len(inputFileStringSlice)]
+	}
 
 	////////////////
 	// sort input //
 	////////////////
 
-	// drop the trailing newline, so that it doesn't get included in the sort
-	if inputFileStringSlice[len(inputFileStringSlice)-1] == "" {
-		inputFileStringSlice = inputFileStringSlice[:len(inputFileStringSlice)]
-	}
 	sortedSlice := bubbleSort(inputFileStringSlice)
 
 	///////////////////////
