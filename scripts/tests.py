@@ -97,8 +97,6 @@ for data_folder_name in os.listdir(f"{base_directory}/data/"):
         ]
         status = subprocess.call(call_args)
 
-        # go test -test.run=TestStuff
-
         # check if the script invoke failed
         if status != 0:
             print(
