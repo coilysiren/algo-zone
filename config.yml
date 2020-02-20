@@ -10,6 +10,7 @@ rust:
 go:
   dockerImage: golang:1.13
   scriptInvoker: go test
+  scriptSuffix: ./src/go/helpers.go
 
 ruby:
   dockerImage: ruby:2.7

@@ -1,56 +1,36 @@
-# bubble sort!
-#
-# docs: https://en.wikipedia.org/wiki/Bubble_sort
-#
-# bubble sort steps through a list, comparing adjacent elements and swapping them if they are in the wrong order
-# it passes through the list repeatedly until the list is sorted
-
-
 import os
 import sys
 from typing import List
 
 
-###################
-# read input file #
-###################
+#####################
+# sort script start #
+#####################
 
 
-inputFilePath = os.getenv("INPUT_PATH")
-with open(inputFilePath, "r") as inputFileObject:
-    inputFileData = inputFileObject.readlines()
+# bubble sort!
+#
+# docs: https://en.wikipedia.org/wiki/Bubble_sort
+#
+# bubble sort steps through a list, comparing adjacent elements and swapping them if they
+# are in the wrong order. it passes through the list repeatedly until the list is sorted
 
 
-##############
-# sort input #
-##############
+def do_sorting(input_list):
+    return bubble_sort(input_list)
 
 
 # bubble_sort is the top level function responsible for ... bubble sorting!
 def bubble_sort(input_list: List[str]) -> List[str]:
     # set defaults
-    output_list = []
+    output_list = input_list
     is_sorted = False
-
-    # cleanup our input data
-    output_list = clean_whitespace(input_list)
 
     # continuously do sorting rounds as long as the list remains unsorted
     while is_sorted == False:
         output_list, is_sorted = do_sorting_round(output_list)
 
     # mission accomplished! ✨
-    return output_list
-
-
-# clean_whitespace cleans up our input data
-def clean_whitespace(input_list: List[str]) -> List[str]:
-    # set defaults
-    output_list = []
-
-    for element in input_list:
-        output_list.append(element.strip())
-
     return output_list
 
 
@@ -84,15 +64,28 @@ def do_sorting_round(input_list: List[str]) -> (List[str], bool):
     return output_list, is_sorted
 
 
-sortedData = bubble_sort(inputFileData)
+###################
+# sort script end #
+###################
 
+# 👇🏽 copy pasted helpers
 
-#####################
-# write output file #
-#####################
+if __name__ == "__main__":
+    # read input file
+    inputFilePath = os.getenv("INPUT_PATH")
+    with open(inputFilePath, "r") as inputFileObject:
+        inputFileData = inputFileObject.readlines()
 
+    # clean input data
+    cleanedInputData = []
+    for element in inputFileData:
+        cleanedInputData.append(element.strip())
 
-outputFilePath = os.getenv("OUTPUT_PATH")
-with open(outputFilePath, "w") as outputFileObject:
-    for element in sortedData:
-        outputFileObject.write(element + "\n")
+    # do sorting
+    sortedData = do_sorting(cleanedInputData)
+
+    # write output file
+    outputFilePath = os.getenv("OUTPUT_PATH")
+    with open(outputFilePath, "w") as outputFileObject:
+        for element in sortedData:
+            outputFileObject.write(element + "\n")

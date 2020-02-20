@@ -1,19 +1,25 @@
+# frozen_string_literal: true
+
+#####################
+# sort script start #
+#####################
+
+def do_sorting(input_list)
+  output_list = input_list
+  output_list = output_list.sort
+  output_list
+end
+
 ###################
-# read input file #
+# sort script end #
 ###################
 
-input_file_path = ENV["INPUT_PATH"]
+# 👇🏽 copy pasted helpers
+
+input_file_path = ENV['INPUT_PATH']
 input_file = File.readlines(input_file_path)
 
-##############
-# sort input #
-##############
+sorted_data = do_sorting(input_file)
 
-input_file = input_file.sort
-
-#####################
-# write output file #
-#####################
-
-output_file_path = ENV["OUTPUT_PATH"]
-File.open(output_file_path, "wb") { |f| f.write(input_file.join("")) }
+output_file_path = ENV['OUTPUT_PATH']
+File.open(output_file_path, 'wb') { |f| f.write(sorted_data.join('')) }
