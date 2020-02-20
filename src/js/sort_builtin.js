@@ -22,7 +22,7 @@ let inputString = fs.readFileSync(inputFilePath, 'utf8');
 let inputStringSplit = inputString.split(/\n/);
 
 // clean input data
-if (inputStringSplit[inputStringSplit.length - 1] == "") {
+if (inputStringSplit[inputStringSplit.length - 1] === "") {
   inputStringSplit = inputStringSplit.slice(0, inputStringSplit.length - 1);
 }
 
