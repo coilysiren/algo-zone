@@ -12,8 +12,8 @@ import (
 //
 // docs: https://en.wikipedia.org/wiki/Bubble_sort
 //
-// bubble sort steps through a list, comparing adjacent elements and swapping them if they are in the wrong order
-// it passes through the list repeatedly until the list is sorted
+// bubble sort steps through a list, comparing adjacent elements and swapping them if they
+// are in the wrong order. it passes through the list repeatedly until the list is sorted
 
 // bubble_sort is the top level function responsible for ... bubble sorting!
 func bubbleSort(inputList []string) (outputList []string) {
