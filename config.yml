@@ -5,6 +5,7 @@ python:
 rust:
   dockerImage: rust:1.40
   scriptInvoker: cargo run --manifest-path ./src/rust/Cargo.toml --bin
+  envVars: RUST_BACKTRACE=1
   useShortScriptName: true
 
 go:
