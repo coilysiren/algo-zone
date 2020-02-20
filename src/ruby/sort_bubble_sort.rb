@@ -31,7 +31,7 @@ def do_sorting_round(input_list)
       output_list.pop
       output_list.append(element)
       output_list.append(previous_element)
-			is_sorted = false
+      is_sorted = false
     else
       output_list.append(element)
     end
