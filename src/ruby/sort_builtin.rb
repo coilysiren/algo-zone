@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #####################
 # sort script start #
 #####################
@@ -14,10 +16,10 @@ end
 
 # 👇🏽 copy pasted helpers
 
-input_file_path = ENV["INPUT_PATH"]
+input_file_path = ENV['INPUT_PATH']
 input_file = File.readlines(input_file_path)
 
 sorted_data = do_sorting(input_file)
 
-output_file_path = ENV["OUTPUT_PATH"]
-File.open(output_file_path, "wb") { |f| f.write(sorted_data.join("")) }
+output_file_path = ENV['OUTPUT_PATH']
+File.open(output_file_path, 'wb') { |f| f.write(sorted_data.join('')) }
