@@ -9,3 +9,7 @@ name = "sort_builtin"
 [[bin]]
 path = "sort_bubble_sort.rs"
 name = "sort_bubble_sort"
+
+[[bin]]
+path = "sort_insertion_sort.rs"
+name = "sort_insertion_sort"
