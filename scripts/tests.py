@@ -82,14 +82,21 @@ for data_folder_name in os.listdir(f"{base_directory}/data/"):
         else:
             script_to_invoke = script_name
 
-        # the latter half of the call ends up looking like
-        #   python ./src/python/sort_builtin.py
+        # construction initial call args
         call_args = [
             "docker",
             "run",
             f"--volume={base_directory}:/workdir",
             f"-w=/workdir",
-            f"-e={config[language].get('envVars', '')}",
+        ]
+
+        # construct env vars CLI args
+        envVars = config[language].get("envVars", "")
+        if envVars != "":
+            call_args.append(f"-e={envVars}")
+
+        # construct ending call args
+        call_args += [
             f"-e=INPUT_PATH={data_folder_path}/randomized.txt",
             f"-e=OUTPUT_PATH={script_output_file_path}",
             config[language]["dockerImage"],
