@@ -94,6 +94,7 @@ for data_folder_name in os.listdir(f"{base_directory}/data/"):
             config[language]["dockerImage"],
             *script_invoker,
             script_to_invoke,
+            config[language]["scriptSuffix"],
         ]
         status = subprocess.call(call_args)
 
