@@ -7,6 +7,14 @@ use std::io::Write;
 // sort script start //
 ///////////////////////
 
+// insertion sort!
+//
+// docs: https://en.wikipedia.org/wiki/Insertion_sort
+//
+// insertion sort steps through an input list, using it to grow an output list.
+// on every step, it inserts the current element into its proper location on the output list.
+// it continues until the input list is empty.
+
 fn do_sorting(input_list: Vec<&str>) -> Vec<&str> {
   return insertion_sort(input_list);
 }
