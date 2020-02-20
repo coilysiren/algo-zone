@@ -89,6 +89,7 @@ for data_folder_name in os.listdir(f"{base_directory}/data/"):
             "run",
             f"--volume={base_directory}:/workdir",
             f"-w=/workdir",
+            f"-e={config[language].get('envVars', '')}",
             f"-e=INPUT_PATH={data_folder_path}/randomized.txt",
             f"-e=OUTPUT_PATH={script_output_file_path}",
             config[language]["dockerImage"],
