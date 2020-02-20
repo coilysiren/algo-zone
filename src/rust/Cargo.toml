@@ -5,3 +5,7 @@ version = "0.0.0"
 [[bin]]
 path = "sort_builtin.rs"
 name = "sort_builtin"
+
+[[bin]]
+path = "sort_bubble_sort.rs"
+name = "sort_bubble_sort"
