@@ -19,12 +19,9 @@ pipenv sync
 Then run any of these as many times as you want
 
 ```bash
-# 1st example
+# example CLI calls
 pipenv run tests
-
-# 2nd example
 pipenv run tests $language
-
-# 3rd example
 pipenv run tests rust
+pipenv run tests python sort_insertion_sort
 ```
