@@ -8,9 +8,9 @@
 #
 # docs: https://en.wikipedia.org/wiki/Insertion_sort
 #
-# insertion sort steps through an input list, using it to grow an output list.
-# on every step, it inserts the current element into its proper location on the
-# output list. it continues until the input list is empty.
+# Insertion sort steps through an input list, using it to grow an output list.
+# On every step, it sorts the current element into its proper location on the
+# output list. It continues until the input list is empty.
 
 def do_sorting(input_list)
   insertion_sort(input_list)
