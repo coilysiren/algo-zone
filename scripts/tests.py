@@ -136,6 +136,7 @@ for data_folder_name in os.listdir(f"{base_directory}/data/"):
             print(
                 f"\t output file {script_output_file_name} has does not match the prepared file"
             )
+            a_script_has_failed = True
 
 if a_script_has_failed:
     print("🚨 a script failed! 🚨")
