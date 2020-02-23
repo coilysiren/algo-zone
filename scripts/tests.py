@@ -29,7 +29,8 @@ class TestRunner(object):
         self.base_directory = os.getcwd()
         with open(f"{self.base_directory}/config.yml", "r") as obj:
             data = obj.read()
-            self.config = yaml.safe_load(data)
+            config_yaml = yaml.safe_load(data)
+            self.config = config_yaml[self.language]
 
     def run_tests(self):
         # for everything in the data folder
@@ -82,13 +83,13 @@ class TestRunner(object):
                 # script_invoker is command that we run in a subprocess to invoke our script
                 # it needs to be split on spaces since subprocess.call excepts a list as input
                 # whenever we aren't using the shell=True arguement
-                script_invoker = self.config[self.language]["scriptInvoker"].split(" ")
+                script_invoker = self.config["scriptInvoker"].split(" ")
 
                 # script_to_invoke is the literal script name that we pass to the invoker
                 # we assume that invokers accept paths by default (eg. script_path)
                 # and that other invokers want script names (eg. script_name)
                 # the useShortScriptName config value controls this behavior
-                if self.config[self.language].get("useShortScriptName", False) == False:
+                if self.config.get("useShortScriptName", False) == False:
                     script_to_invoke = script_relative_path
                 else:
                     script_to_invoke = script_name
@@ -102,7 +103,7 @@ class TestRunner(object):
                 ]
 
                 # construct env vars CLI args
-                envVars = self.config[self.language].get("envVars", "")
+                envVars = self.config.get("envVars", "")
                 if envVars != "":
                     call_args.append(f"-e={envVars}")
 
@@ -110,10 +111,10 @@ class TestRunner(object):
                 call_args += [
                     f"-e=INPUT_PATH={data_folder_path}/randomized.txt",
                     f"-e=OUTPUT_PATH={script_output_file_path}",
-                    self.config[self.language]["dockerImage"],
+                    self.config["dockerImage"],
                     *script_invoker,
                     script_to_invoke,
-                    self.config[self.language].get("scriptSuffix", ""),
+                    self.config.get("scriptSuffix", ""),
                 ]
                 status = subprocess.call(call_args)
 
