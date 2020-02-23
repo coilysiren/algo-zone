@@ -26,13 +26,14 @@ def insertion_sort(input_list: List[str]) -> List[str]:
 
     for index, element in enumerate(input_list):
         output_list.append(element)
-        output_list, insert_target_index(output_list, index)
+        output_list = insert_element(output_list, element, index)
 
     return output_list
 
 
-def insert_target_index(input_list: List[str], target_index: int) -> List[str]:
+def insert_element(input_list: List[str], element: str, index: int) -> List[str]:
     output_list = input_list
+    target_index = index
 
     while (target_index != 0) and (element < output_list[target_index - 1]):
         # swap order
