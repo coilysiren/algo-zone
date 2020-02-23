@@ -178,12 +178,16 @@ def inputs_are_truthy_and_different(first, second):
     if (not first) or (not second):
         return False
     # cleanup
-    first_cleaned = first.replace("_", "-")
-    second_cleaned = second.replace("_", "-")
+    first_cleaned = clean_string(first)
+    second_cleaned = clean_string(second)
     # check if inputs are different
     if first_cleaned != second_cleaned:
         return True
     return False
+
+
+def clean_string(inp):
+    return inp.replace("-", "_").replace("_test", "")
 
 
 if __name__ == "__main__":
