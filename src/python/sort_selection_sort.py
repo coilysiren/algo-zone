@@ -24,11 +24,24 @@ def selection_sort(input_list):
     sorted_elements = []
     unsorted_elements = input_list
 
-    for _ in unsorted_elements:
+    # do: iterate over the length of the unsorted_elements
+    # do not: iterate over the unsorted_elements list directly
+    # why:
+    #   it's risky, because some languages (like python) WILL for sure
+    #   stop list iteration early because of you popping an element
+    #   out of the list
+    for _ in range(len(unsorted_elements)):
+
+        # print("--- for _ in unsorted_elements: ---")
+        # print(f"unsorted_elements => {unsorted_elements}")
+        # print(f"sorted_elements => {sorted_elements}")
         smallest_index = find_smallest_index(unsorted_elements)
         smallest_element = unsorted_elements[smallest_index]
-        sorted_elements.append(unsorted_elements[smallest_index])
+        sorted_elements.append(smallest_element)
         unsorted_elements.pop(smallest_index)
+        # print(f"smallest_index => {smallest_index}")
+        # print(f"sorted_elements => {sorted_elements}")
+        # print(f"unsorted_elements => {unsorted_elements}")
 
     return sorted_elements
 
