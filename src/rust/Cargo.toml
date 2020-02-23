@@ -13,3 +13,7 @@ name = "sort_bubble_sort"
 [[bin]]
 path = "sort_insertion_sort.rs"
 name = "sort_insertion_sort"
+
+[[bin]]
+path = "sort_selection_sort.rs"
+name = "sort_selection_sort"
