@@ -17,15 +17,18 @@ class TestRunner(object):
     language = ""
     # input_script is the name of a script you want to run
     input_script = ""
+    # input_data is the name of the data you want to run against
+    input_data = ""
     # base_directory is prepended to many of our paths
     base_directory = ""
     # config contains language specific configuration
     config = {}
 
     # __init__ reads off of sys.argv, and the first input arg is the name of this file
-    def __init__(self, _, language="python", input_script=""):
+    def __init__(self, _, language="python", input_script="", input_data=""):
         self.language = language
         self.input_script = input_script
+        self.input_data = input_data
         self.base_directory = os.getcwd()
         with open(f"{self.base_directory}/config.yml", "r") as obj:
             data = obj.read()
@@ -41,6 +44,11 @@ class TestRunner(object):
 
             # check if it's a sub-folder containing data, and continue if not
             if not os.path.isdir(data_folder_path):
+                continue
+
+            # if input data file name was passed in, and this data is not the input data
+            # then continue to the next set of data
+            if inputs_are_truthy_and_different(self.input_data, data_folder_name):
                 continue
 
             # run every sort script
@@ -73,7 +81,7 @@ class TestRunner(object):
 
                 # if an input script was passed in, and this script is not that input script
                 # then continue on to the next script
-                if (self.input_script != "") and (script_name != self.input_script):
+                if inputs_are_truthy_and_different(self.input_script, script_name):
                     continue
 
                 # if an old script output file already exists, remove it
@@ -163,6 +171,19 @@ class TestRunner(object):
         else:
             print("🚨 script run failure 🚨")
             sys.exit(1)
+
+
+def inputs_are_truthy_and_different(first, second):
+    # check if inputs are truthy
+    if (not first) or (not second):
+        return False
+    # cleanup
+    first_cleaned = first.replace("_", "-")
+    second_cleaned = second.replace("_", "-")
+    # check if inputs are different
+    if first_cleaned != second_cleaned:
+        return True
+    return False
 
 
 if __name__ == "__main__":
