@@ -23,7 +23,7 @@ Then run any of these
 pipenv run tests
 pipenv run tests $language $script_name $data
 pipenv run tests python
-pipenv run tests python all
+pipenv run tests python any
 pipenv run tests python insertion_sort
 pipenv run tests python insertion_sort first_names
 ```

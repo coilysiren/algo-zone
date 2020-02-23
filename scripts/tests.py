@@ -180,8 +180,9 @@ def inputs_are_truthy_and_different(first, second):
     # cleanup
     first_cleaned = clean_string(first)
     second_cleaned = clean_string(second)
-    # allow for "all" matching
-    if (first_cleaned == "all") or (second_cleaned == "all"):
+    # allow for wildcard matching
+    wildcard_keyword = "any"
+    if (first_cleaned == wildcard_keyword) or (second_cleaned == wildcard_keyword):
         return False
     # check if inputs are different
     if first_cleaned != second_cleaned:
@@ -190,7 +191,9 @@ def inputs_are_truthy_and_different(first, second):
 
 
 def clean_string(inp):
-    return inp.replace("-", "").replace("_", "").replace("test", "").replace("sort", "")
+    for element in ["-", "_", "test", "sort"]:
+        inp = inp.replace(element, "")
+    return inp
 
 
 if __name__ == "__main__":
