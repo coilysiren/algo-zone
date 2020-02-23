@@ -28,17 +28,17 @@ def insertion_sort(input_list)
 end
 
 def sort_element_at_index(input_list, element, idx)
-  puts '--- sort_element_at_index ---'
-  puts "element => #{element}"
-  puts "index => #{idx}"
+  # puts '--- sort_element_at_index ---'
+  # puts "element => #{element}"
+  # puts "index => #{idx}"
   output_list = input_list
   target_index = idx
 
   while (target_index != 0) && (element < output_list[target_index - 1])
     output_list.swap(target_index)
     target_index -= 1
-    puts "\ttarget_index => #{target_index}"
-    puts "\toutput_list => #{output_list}"
+    # puts "\ttarget_index => #{target_index}"
+    # puts "\toutput_list => #{output_list}"
   end
 
   output_list
