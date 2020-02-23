@@ -19,17 +19,17 @@ end
 def insertion_sort(input_list)
   output_list = []
 
-  input_list.each_with_index do |element, index|
+  input_list.each_with_index do |element, idx|
     output_list.append(element)
-    output_list = sort_element_at_index(output_list, element, index)
+    output_list = sort_element_at_index(output_list, element, idx)
   end
 
   output_list
 end
 
-def sort_element_at_index(input_list, element, index)
+def sort_element_at_index(input_list, element, idx)
   output_list = input_list
-  target_index = index
+  target_index = idx
 
   while (target_index != 0) && (element < output_list[target_index - 1])
     # swap
