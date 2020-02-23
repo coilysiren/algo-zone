@@ -13,8 +13,18 @@ import yaml
 class TestRunner(object):
     # successful tracks the success status of the test runs
     successful = None
+    # language is the programming language to run scripts in
+    language = ""
+    # input_script is the name of a script you want to run
+    input_script = ""
 
-    def run_tests(self, *, language, input_script):
+    # read input args and set defaults
+    # this reads off of sys.argv, and the first input arg is the name of this file
+    def __init__(self, _, language="python", input_script=""):
+        self.language = language
+        self.input_script = input_script
+
+    def run_tests(self):
         # the base directory is prepended to the path that
         # we give to our scripts, to prevent unfortunate path tragedies
         base_directory = os.getcwd()
@@ -39,7 +49,9 @@ class TestRunner(object):
                 continue
 
             # run every sort script
-            for script_path in glob.glob(f"{base_directory}/src/{language}/sort_*"):
+            for script_path in glob.glob(
+                f"{base_directory}/src/{self.language}/sort_*"
+            ):
 
                 # given "src/python/sort_builtin.py" => split on "/" and return "sort_builtin.py"
                 script_path_split_on_slash = script_path.split("/")
@@ -50,21 +62,23 @@ class TestRunner(object):
                 script_name = script_name_split_on_dot[0]
 
                 # this path is used in various places later
-                script_relative_path = f"./src/{language}/{script_name_with_file_type}"
+                script_relative_path = (
+                    f"./src/{self.language}/{script_name_with_file_type}"
+                )
 
                 # get the path of the file that's been prepared in advance
                 # and has the output we would be expecting from out script
                 preparedFilePath = f"{data_folder_path}/sorted.txt"
 
                 # our scripts write their output files to this path
-                script_output_file_name = f"sorted_by_{language}_{script_name}.txt"
+                script_output_file_name = f"sorted_by_{self.language}_{script_name}.txt"
                 script_output_file_path = (
                     f"{data_folder_path}/{script_output_file_name}"
                 )
 
                 # if an input script was passed in, and this script is not that input script
                 # then continue on to the next script
-                if (input_script != "") and (script_name != input_script):
+                if (self.input_script != "") and (script_name != self.input_script):
                     continue
 
                 # if an old script output file already exists, remove it
@@ -74,13 +88,13 @@ class TestRunner(object):
                 # script_invoker is command that we run in a subprocess to invoke our script
                 # it needs to be split on spaces since subprocess.call excepts a list as input
                 # whenever we aren't using the shell=True arguement
-                script_invoker = config[language]["scriptInvoker"].split(" ")
+                script_invoker = config[self.language]["scriptInvoker"].split(" ")
 
                 # script_to_invoke is the literal script name that we pass to the invoker
                 # we assume that invokers accept paths by default (eg. script_path)
                 # and that other invokers want script names (eg. script_name)
                 # the useShortScriptName config value controls this behavior
-                if config[language].get("useShortScriptName", False) == False:
+                if config[self.language].get("useShortScriptName", False) == False:
                     script_to_invoke = script_relative_path
                 else:
                     script_to_invoke = script_name
@@ -94,7 +108,7 @@ class TestRunner(object):
                 ]
 
                 # construct env vars CLI args
-                envVars = config[language].get("envVars", "")
+                envVars = config[self.language].get("envVars", "")
                 if envVars != "":
                     call_args.append(f"-e={envVars}")
 
@@ -102,10 +116,10 @@ class TestRunner(object):
                 call_args += [
                     f"-e=INPUT_PATH={data_folder_path}/randomized.txt",
                     f"-e=OUTPUT_PATH={script_output_file_path}",
-                    config[language]["dockerImage"],
+                    config[self.language]["dockerImage"],
                     *script_invoker,
                     script_to_invoke,
-                    config[language].get("scriptSuffix", ""),
+                    config[self.language].get("scriptSuffix", ""),
                 ]
                 status = subprocess.call(call_args)
 
@@ -152,28 +166,17 @@ class TestRunner(object):
         else:
             self.successful = False
 
+    def show_results(self):
+        if self.successful == True:
+            print("✨ script run success ✨")
+            sys.exit(0)
+        else:
+            print("🚨 script run failure 🚨")
+            sys.exit(1)
+
 
 if __name__ == "__main__":
-    # get the language to run, defaulting to python
-    if len(sys.argv) > 1:
-        language = sys.argv[1]
-    else:
-        language = "python"
-
-    # optionally get the script to run
-    if len(sys.argv) > 2:
-        input_script = sys.argv[2]
-    else:
-        input_script = ""
-
     # run tests
-    runner = TestRunner()
-    runner.run_tests(language=language, input_script=input_script)
-
-    # process test result
-    if runner.successful == True:
-        print("✨ all scripts succeeded ✨")
-        sys.exit(0)
-    else:
-        print("🚨 no successful script runs! 🚨")
-        sys.exit(1)
+    runner = TestRunner(*sys.argv)
+    runner.run_tests()
+    runner.show_results()
