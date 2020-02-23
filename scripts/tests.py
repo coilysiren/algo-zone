@@ -17,29 +17,23 @@ class TestRunner(object):
     language = ""
     # input_script is the name of a script you want to run
     input_script = ""
+    # base_directory is prepended to many of our paths
+    base_directory = ""
+    # config contains language specific configuration
+    config = {}
 
-    # read input args and set defaults
-    # this reads off of sys.argv, and the first input arg is the name of this file
+    # __init__ reads off of sys.argv, and the first input arg is the name of this file
     def __init__(self, _, language="python", input_script=""):
         self.language = language
         self.input_script = input_script
+        self.base_directory = os.getcwd()
+        with open(f"{self.base_directory}/config.yml", "r") as obj:
+            data = obj.read()
+            self.config = yaml.safe_load(data)
 
     def run_tests(self):
-        # the base directory is prepended to the path that
-        # we give to our scripts, to prevent unfortunate path tragedies
-        base_directory = os.getcwd()
-
-        # get the config file, which contains customization info
-        # about each of our languages
-        with open(f"{base_directory}/config.yml", "r") as config_file_object:
-            config_file_data = config_file_object.read()
-            config = yaml.safe_load(config_file_data)
-            # ^ this would be called `config_file_yaml` or similar to match the naming
-            # but then we would have to use that verbose reference for the rest
-            # of this script. so we opt for the short `config` instead.
-
         # for everything in the data folder
-        for data_folder_name in os.listdir(f"{base_directory}/data/"):
+        for data_folder_name in os.listdir(f"{self.base_directory}/data/"):
 
             # expand the data folder name into it's full path
             data_folder_path = f"./data/{data_folder_name}"
@@ -50,7 +44,7 @@ class TestRunner(object):
 
             # run every sort script
             for script_path in glob.glob(
-                f"{base_directory}/src/{self.language}/sort_*"
+                f"{self.base_directory}/src/{self.language}/sort_*"
             ):
 
                 # given "src/python/sort_builtin.py" => split on "/" and return "sort_builtin.py"
@@ -88,13 +82,13 @@ class TestRunner(object):
                 # script_invoker is command that we run in a subprocess to invoke our script
                 # it needs to be split on spaces since subprocess.call excepts a list as input
                 # whenever we aren't using the shell=True arguement
-                script_invoker = config[self.language]["scriptInvoker"].split(" ")
+                script_invoker = self.config[self.language]["scriptInvoker"].split(" ")
 
                 # script_to_invoke is the literal script name that we pass to the invoker
                 # we assume that invokers accept paths by default (eg. script_path)
                 # and that other invokers want script names (eg. script_name)
                 # the useShortScriptName config value controls this behavior
-                if config[self.language].get("useShortScriptName", False) == False:
+                if self.config[self.language].get("useShortScriptName", False) == False:
                     script_to_invoke = script_relative_path
                 else:
                     script_to_invoke = script_name
@@ -103,12 +97,12 @@ class TestRunner(object):
                 call_args = [
                     "docker",
                     "run",
-                    f"--volume={base_directory}:/workdir",
+                    f"--volume={self.base_directory}:/workdir",
                     f"-w=/workdir",
                 ]
 
                 # construct env vars CLI args
-                envVars = config[self.language].get("envVars", "")
+                envVars = self.config[self.language].get("envVars", "")
                 if envVars != "":
                     call_args.append(f"-e={envVars}")
 
@@ -116,10 +110,10 @@ class TestRunner(object):
                 call_args += [
                     f"-e=INPUT_PATH={data_folder_path}/randomized.txt",
                     f"-e=OUTPUT_PATH={script_output_file_path}",
-                    config[self.language]["dockerImage"],
+                    self.config[self.language]["dockerImage"],
                     *script_invoker,
                     script_to_invoke,
-                    config[self.language].get("scriptSuffix", ""),
+                    self.config[self.language].get("scriptSuffix", ""),
                 ]
                 status = subprocess.call(call_args)
 
