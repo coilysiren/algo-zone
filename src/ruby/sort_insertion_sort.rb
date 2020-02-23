@@ -32,16 +32,21 @@ def sort_element_at_index(input_list, element, idx)
   target_index = idx
 
   while (target_index != 0) && (element < output_list[target_index - 1])
-    output_list = swap(output_list, target_index)
+    output_list.swap(target_index)
     target_index -= target_index
   end
+  puts "target_index => #{target_index}"
+  puts "element => #{element}"
+  puts "output_list => #{output_list}"
 
   output_list
 end
 
-def swap(list, idx)
-  list[idx], list[idx - 1] = list[idx - 1], list[idx]
-  list
+# add swap method to array
+class Array
+  def swap(idx)
+    self[idx], self[idx - 1] = self[idx - 1], self[idx]
+  end
 end
 
 ###################
