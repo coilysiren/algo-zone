@@ -125,21 +125,21 @@ class TestRunner(object):
 
                 # check if the script invoke failed
                 if status != 0:
+                    self.set_success_status(False)
                     print(
                         f'🔴 script "{script_relative_path}" failed on data "{data_folder_name}", reason:'
                     )
                     print(f'\t the exit code "{status}" was not 0')
-                    continue
 
                 # check if the output file was created
                 if not os.path.isfile(script_output_file_path):
+                    self.set_success_status(False)
                     print(
                         f'🔴 script "{script_relative_path}" failed on data "{data_folder_name}", reason:'
                     )
                     print(
                         f"\t the output {script_output_file_name} file was not created"
                     )
-                    continue
 
                 # check if the output file matches the prepared file
                 if filecmp.cmp(preparedFilePath, script_output_file_path):
@@ -148,6 +148,7 @@ class TestRunner(object):
                         f'🟢 script "{script_relative_path}" succeeded on data "{data_folder_name}"'
                     )
                 else:
+                    self.set_success_status(False)
                     print(
                         f'🔴 script "{script_relative_path}" failed on data "{data_folder_name}", reason:'
                     )
@@ -156,15 +157,8 @@ class TestRunner(object):
                     )
 
     def set_success_status(self, status: bool):
-        # if "none", set status
-        if self.successful == None:
+        if self.successful != False:
             self.successful = status
-        # if "true" set status (to true or false)
-        elif self.successful == True:
-            self.successful = status
-        # else (eg. if false) leave as false
-        else:
-            self.successful = False
 
     def show_results(self):
         if self.successful == True:
