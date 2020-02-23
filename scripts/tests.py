@@ -157,6 +157,7 @@ class TestRunner(object):
                     )
 
     def set_success_status(self, status: bool):
+        # only update the test success status if it wasnt already false
         if self.successful != False:
             self.successful = status
 
