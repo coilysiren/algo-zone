@@ -25,5 +25,6 @@ pipenv run tests $language $script $data
 pipenv run tests python
 pipenv run tests python insertion_sort
 pipenv run tests python insertion_sort first_names
-pipenv run tests python any            first_names
+# "any" is a wildcard keyword
+pipenv run tests python any first_names
 ```
