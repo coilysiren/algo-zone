@@ -32,13 +32,16 @@ def sort_element_at_index(input_list, element, idx)
   target_index = idx
 
   while (target_index != 0) && (element < output_list[target_index - 1])
-    # swap
-    output_list[target_index], output_list[target_index - 1] = \
-      output_list[target_index - 1], output_list[target_index]
+    output_list = swap(output_list, target_index)
     target_index -= target_index
   end
 
   output_list
+end
+
+def swap(list, idx)
+  list[idx], list[idx - 1] = list[idx - 1], list[idx]
+  list
 end
 
 ###################
