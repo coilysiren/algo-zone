@@ -1,44 +1,37 @@
 package algozone
 
 import (
+	"fmt"
 	"io/ioutil"
-	"log"
-	"os"
 	"path"
 	"strings"
 )
 
-func getInputList() (inputList []string) {
-	// setup
-	workingDirectory, err := os.Getwd()
-	if err != nil {
-		log.Fatal(err)
-	}
-	inputFilePath := path.Join(workingDirectory, "../../", os.Getenv("INPUT_PATH"))
+type sortFunc func([]string) []string
 
+const randomizedDataPath = "./../../data/randomized.txt"
+const sortedDataPath = "./../../data/sorted.txt"
+
+func getInputList() (inputList []string, err error) {
 	// read input file
-	inputFileBytes, err := ioutil.ReadFile(inputFilePath)
+	fileBytes, err := ioutil.ReadFile(randomizedDataPath)
 	if err != nil {
-		log.Fatal(err)
+		err = fmt.Errorf("error reading input file path: %w", err)
+		return nil, err
 	}
-	inputFileString := string(inputFileBytes)
-	inputFileStringSlice := strings.Split(inputFileString, "\n")
+	fileSlice := strings.Split(string(fileBytes), "\n")
 
 	// clean input data
-	if inputFileStringSlice[len(inputFileStringSlice)-1] == "" {
-		inputFileStringSlice = inputFileStringSlice[:len(inputFileStringSlice)]
+	if fileSlice[len(fileSlice)-1] == "" {
+		fileSlice = fileSlice[:len(fileSlice)]
 	}
 
-	return inputFileStringSlice
+	return fileSlice, nil
 }
 
-func writeOutputList(outputList []string) {
+func writeAndCompareOutputList(outputList []string, filename string) (err error) {
 	// setup
-	workingDirectory, err := os.Getwd()
-	if err != nil {
-		log.Fatal(err)
-	}
-	ouputFilePath := path.Join(workingDirectory, "../../", os.Getenv("OUTPUT_PATH"))
+	filePath := path.Join(sortedDataPath, "..", filename+".txt")
 
 	// clean data
 	outputString := strings.Join(outputList, "\n")
@@ -50,8 +43,11 @@ func writeOutputList(outputList []string) {
 	outputString += "\n"
 	outputBytes := []byte(outputString)
 	// write file finally
-	err = ioutil.WriteFile(ouputFilePath, outputBytes, 0644)
+	err = ioutil.WriteFile(filePath, outputBytes, 0644)
 	if err != nil {
-		log.Fatal(err)
+		err = fmt.Errorf("error writing output: %w", err)
+		return err
 	}
+
+	return nil
 }

@@ -27,4 +27,4 @@ jobs:
           pipenv sync
 
       - name: run tests
-        run: pipenv run tests ${{ matrix.language }} any first_names
+        run: pipenv run tests ${{ matrix.language }} any
