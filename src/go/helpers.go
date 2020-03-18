@@ -3,7 +3,6 @@ package algozone
 import (
 	"fmt"
 	"io/ioutil"
-	"log"
 	"path"
 	"strings"
 )
@@ -11,12 +10,12 @@ import (
 const randomizedDataPath = "./../../data/randomized.txt"
 const sortedDataPath = "./../../data/sorted.txt"
 
-func getInputList() (inputList []string) {
+func getInputList() (inputList []string, err error) {
 	// read input file
 	fileBytes, err := ioutil.ReadFile(randomizedDataPath)
 	if err != nil {
 		err = fmt.Errorf("error reading input file path: %w", err)
-		log.Fatal(err)
+		return nil, err
 	}
 	fileSlice := strings.Split(string(fileBytes), "\n")
 
@@ -25,10 +24,10 @@ func getInputList() (inputList []string) {
 		fileSlice = fileSlice[:len(fileSlice)]
 	}
 
-	return fileSlice
+	return fileSlice, nil
 }
 
-func writeOutputList(outputList []string, filename string) {
+func writeAndCompareOutputList(outputList []string, filename string) (err error) {
 	// setup
 	filePath := path.Join(sortedDataPath, "..", filename+".txt")
 
@@ -42,9 +41,11 @@ func writeOutputList(outputList []string, filename string) {
 	outputString += "\n"
 	outputBytes := []byte(outputString)
 	// write file finally
-	err := ioutil.WriteFile(filePath, outputBytes, 0644)
+	err = ioutil.WriteFile(filePath, outputBytes, 0644)
 	if err != nil {
 		err = fmt.Errorf("error writing output: %w", err)
-		log.Fatal(err)
+		return err
 	}
+
+	return nil
 }

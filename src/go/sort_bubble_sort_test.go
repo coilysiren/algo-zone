@@ -64,11 +64,19 @@ func doSortingRound(inputList []string) (outputList []string, isSorted bool) {
 /////////////////////
 
 func TestBubbleSort(t *testing.T) {
-	inputList := getInputList()
-	outputList := bubbleSort(inputList)
 	testName := "sorted_by_go_sort_bubble_sort_test"
 	t.Run(testName, func(t *testing.T) {
-		writeOutputList(outputList, testName)
+		inputList, err := getInputList()
+		if err != nil {
+			t.Error(err.Error())
+		}
+
+		outputList := insertionSort(inputList)
+
+		err = writeAndCompareOutputList(outputList, testName)
+		if err != nil {
+			t.Error(err.Error())
+		}
 	})
 }
 
