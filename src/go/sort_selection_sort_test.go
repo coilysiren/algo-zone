@@ -51,7 +51,33 @@ func removeIndex(inputList []string, index int) (outputList []string) {
 /////////////////////
 
 func TestSelectionSort(t *testing.T) {
-	runTest(t, "sorted_by_go_sort_selection_sort_test", selectionSort)
+	testData := []struct {
+		name     string
+		sortFunc sortFunc
+	}{
+		{
+			name:     "sorted_by_go_sort_selection_sort_test",
+			sortFunc: selectionSort,
+		},
+	}
+	for _, test := range testData {
+		t.Run(test.name, func(t *testing.T) {
+			// setup
+			inputList, err := getInputList()
+			if err != nil {
+				t.Error(err.Error())
+			}
+
+			// logic under test
+			outputList := test.sortFunc(inputList)
+
+			// assertions
+			err = writeAndCompareOutputList(outputList, test.name)
+			if err != nil {
+				t.Error(err.Error())
+			}
+		})
+	}
 }
 
 // ☝🏽 per-script helpers

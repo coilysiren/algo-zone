@@ -64,7 +64,33 @@ func doSortingRound(inputList []string) (outputList []string, isSorted bool) {
 /////////////////////
 
 func TestBubbleSort(t *testing.T) {
-	runTest(t, "sorted_by_go_sort_bubble_sort_test", bubbleSort)
+	testData := []struct {
+		name     string
+		sortFunc sortFunc
+	}{
+		{
+			name:     "sorted_by_go_sort_bubble_sort_test",
+			sortFunc: bubbleSort,
+		},
+	}
+	for _, test := range testData {
+		t.Run(test.name, func(t *testing.T) {
+			// setup
+			inputList, err := getInputList()
+			if err != nil {
+				t.Error(err.Error())
+			}
+
+			// logic under test
+			outputList := test.sortFunc(inputList)
+
+			// assertions
+			err = writeAndCompareOutputList(outputList, test.name)
+			if err != nil {
+				t.Error(err.Error())
+			}
+		})
+	}
 }
 
 // ☝🏽 per-script helpers
