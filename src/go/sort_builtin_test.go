@@ -22,7 +22,7 @@ func doBuiltinSort(inputList []string) (outputList []string) {
 func TestBuiltinSort(t *testing.T) {
 	inputList := getInputList()
 	outputList := doBuiltinSort(inputList)
-	writeOutputList(outputList)
+	writeOutputList(outputList, "sorted_by_go_sort_builtin_test")
 }
 
 // ☝🏽 per-script helpers

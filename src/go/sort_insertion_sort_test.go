@@ -1,6 +1,8 @@
 package algozone
 
-import "testing"
+import (
+	"testing"
+)
 
 ///////////////////////
 // sort script start //
@@ -48,7 +50,7 @@ func swapWithPrevious(list []string, idx int) []string {
 func TestInsertionSort(t *testing.T) {
 	inputList := getInputList()
 	outputList := insertionSort(inputList)
-	writeOutputList(outputList)
+	writeOutputList(outputList, "sorted_by_go_sort_insertion_sort_test")
 }
 
 // ☝🏽 per-script helpers

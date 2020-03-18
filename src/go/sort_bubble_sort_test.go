@@ -66,7 +66,7 @@ func doSortingRound(inputList []string) (outputList []string, isSorted bool) {
 func TestBubbleSort(t *testing.T) {
 	inputList := getInputList()
 	outputList := bubbleSort(inputList)
-	writeOutputList(outputList)
+	writeOutputList(outputList, "sorted_by_go_sort_bubble_sort_test")
 }
 
 // ☝🏽 per-script helpers

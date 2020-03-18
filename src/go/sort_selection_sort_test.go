@@ -53,7 +53,7 @@ func removeIndex(inputList []string, index int) (outputList []string) {
 func TestSelectionSort(t *testing.T) {
 	inputList := getInputList()
 	outputList := selectionSort(inputList)
-	writeOutputList(outputList)
+	writeOutputList(outputList, "sorted_by_go_sort_selection_sort_test")
 }
 
 // ☝🏽 per-script helpers
