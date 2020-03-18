@@ -51,20 +51,7 @@ func removeIndex(inputList []string, index int) (outputList []string) {
 /////////////////////
 
 func TestSelectionSort(t *testing.T) {
-	testName := "sorted_by_go_sort_selection_sort_test"
-	t.Run(testName, func(t *testing.T) {
-		inputList, err := getInputList()
-		if err != nil {
-			t.Error(err.Error())
-		}
-
-		outputList := insertionSort(inputList)
-
-		err = writeAndCompareOutputList(outputList, testName)
-		if err != nil {
-			t.Error(err.Error())
-		}
-	})
+	runTest(t, "sorted_by_go_sort_selection_sort_test", selectionSort)
 }
 
 // ☝🏽 per-script helpers

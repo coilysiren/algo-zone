@@ -48,20 +48,7 @@ func swapWithPrevious(list []string, idx int) []string {
 /////////////////////
 
 func TestInsertionSort(t *testing.T) {
-	testName := "sorted_by_go_sort_insertion_sort_test"
-	t.Run(testName, func(t *testing.T) {
-		inputList, err := getInputList()
-		if err != nil {
-			t.Error(err.Error())
-		}
-
-		outputList := insertionSort(inputList)
-
-		err = writeAndCompareOutputList(outputList, testName)
-		if err != nil {
-			t.Error(err.Error())
-		}
-	})
+	runTest(t, "sorted_by_go_sort_insertion_sort_test", insertionSort)
 }
 
 // ☝🏽 per-script helpers

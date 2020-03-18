@@ -20,20 +20,7 @@ func doBuiltinSort(inputList []string) (outputList []string) {
 /////////////////////
 
 func TestBuiltinSort(t *testing.T) {
-	testName := "sorted_by_go_sort_builtin_test"
-	t.Run(testName, func(t *testing.T) {
-		inputList, err := getInputList()
-		if err != nil {
-			t.Error(err.Error())
-		}
-
-		outputList := insertionSort(inputList)
-
-		err = writeAndCompareOutputList(outputList, testName)
-		if err != nil {
-			t.Error(err.Error())
-		}
-	})
+	runTest(t, "sorted_by_go_sort_builtin_test", doBuiltinSort)
 }
 
 // ☝🏽 per-script helpers

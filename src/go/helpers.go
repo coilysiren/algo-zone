@@ -5,7 +5,10 @@ import (
 	"io/ioutil"
 	"path"
 	"strings"
+	"testing"
 )
+
+type sortFunc func([]string) []string
 
 const randomizedDataPath = "./../../data/randomized.txt"
 const sortedDataPath = "./../../data/sorted.txt"
@@ -48,4 +51,20 @@ func writeAndCompareOutputList(outputList []string, filename string) (err error)
 	}
 
 	return nil
+}
+
+func runTest(t *testing.T, testName string, sortFunc sortFunc) {
+	t.Run(testName, func(t *testing.T) {
+		inputList, err := getInputList()
+		if err != nil {
+			t.Error(err.Error())
+		}
+
+		outputList := sortFunc(inputList)
+
+		err = writeAndCompareOutputList(outputList, testName)
+		if err != nil {
+			t.Error(err.Error())
+		}
+	})
 }
