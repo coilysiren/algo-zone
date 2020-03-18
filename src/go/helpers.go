@@ -55,13 +55,16 @@ func writeAndCompareOutputList(outputList []string, filename string) (err error)
 
 func runTest(t *testing.T, testName string, sortFunc sortFunc) {
 	t.Run(testName, func(t *testing.T) {
+		// setup
 		inputList, err := getInputList()
 		if err != nil {
 			t.Error(err.Error())
 		}
 
+		// logic under test
 		outputList := sortFunc(inputList)
 
+		// assertions
 		err = writeAndCompareOutputList(outputList, testName)
 		if err != nil {
 			t.Error(err.Error())
