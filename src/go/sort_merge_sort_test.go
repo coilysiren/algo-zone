@@ -19,60 +19,23 @@ func MergeSort(inputList []string) (sortedList []string) {
 		doMergeInput = append(doMergeInput, []string{item})
 	}
 
-	doMergeOutput, _ := doMerge(doMergeInput, 0)
+	doMergeOutput, _ := mergeSortRound(doMergeInput, 0)
 	sortedList = doMergeOutput[0]
 
 	return sortedList
 }
 
-func doMerge(inputList [][]string, inputRound int) (outputList [][]string, outputRound int) {
+func mergeSortRound(inputList [][]string, inputRound int) (outputList [][]string, outputRound int) {
 
 	// "round" is used for debugging
 	outputRound = inputRound + 1
 
-	// compare each pair, ignoring potential odd items
+	// merge each pair, ignoring potential odd items
 	for i := 0; i < len(inputList)/2*2; i += 2 {
-
-		var sortedPair []string
-		itemOneIndex, itemTwoIndex := 0, 0
-
-		// fmt.Printf("first  list size is %d \n", len(inputList[i]))
-		// fmt.Printf("second list size is %d \n", len(inputList[i+1]))
-
-		for (itemOneIndex < len(inputList[i])) || (itemTwoIndex < len(inputList[i+1])) {
-
-			// fmt.Printf("\tfirst  list index is %d \n", itemOneIndex)
-			// fmt.Printf("\tsecond list index is %d \n", itemTwoIndex)
-
-			if itemOneIndex == len(inputList[i]) {
-				// boundary check on first list, append from second list
-				sortedPair = append(sortedPair, inputList[i+1][itemTwoIndex])
-				itemTwoIndex++
-			} else if itemTwoIndex == len(inputList[i+1]) {
-				// boundary check on second list, append from first list
-				sortedPair = append(sortedPair, inputList[i][itemOneIndex])
-				itemOneIndex++
-			} else if inputList[i][itemOneIndex] < inputList[i+1][itemTwoIndex] {
-				// comparison check, append from first list
-				// fmt.Printf("putting item one \n")
-				sortedPair = append(sortedPair, inputList[i][itemOneIndex])
-				itemOneIndex++
-			} else {
-				// implicit comparison check, append from second list
-				// fmt.Printf("putting item two \n")
-				sortedPair = append(sortedPair, inputList[i+1][itemTwoIndex])
-				itemTwoIndex++
-			}
-		}
-
-		// fmt.Printf("\tfirst  list index is %d \n", itemOneIndex)
-		// fmt.Printf("\tsecond list index is %d \n", itemTwoIndex)
-		// fmt.Printf("\tcondition one is %t \n", (itemOneIndex < len(inputList[i])))
-		// fmt.Printf("\tcondition two is %t \n", (itemTwoIndex < len(inputList[i+1])))
-		// fmt.Printf("\tpair condition is is %t \n", (itemOneIndex < len(inputList[i])) && (itemTwoIndex < len(inputList[i+1])))
-		// fmt.Printf("pair size is %d \n", len(sortedPair))
-
-		outputList = append(outputList, sortedPair)
+		outputList = append(
+			outputList,
+			merge(inputList[i], inputList[i+1]),
+		)
 	}
 
 	// handle odd items
@@ -80,16 +43,39 @@ func doMerge(inputList [][]string, inputRound int) (outputList [][]string, outpu
 		outputList = append(outputList, inputList[len(inputList)-1])
 	}
 
-	// fmt.Printf("round is %d \n", outputRound)
-	// fmt.Printf("operating on %d un-merged lists \n", len(inputList))
-	// fmt.Printf("outputing on %d merged lists \n", len(outputList))
-
 	// recurse!
 	if len(outputList) != 1 {
-		return doMerge(outputList, outputRound)
+		return mergeSortRound(outputList, outputRound)
 	}
 
 	return outputList, outputRound
+}
+
+func merge(left []string, right []string) (result []string) {
+	leftIndex, rightIndex := 0, 0
+
+	for (leftIndex < len(left)) || (rightIndex < len(right)) {
+
+		if leftIndex == len(left) {
+			// boundary check on first list, append from second list
+			result = append(result, right[rightIndex])
+			rightIndex++
+		} else if rightIndex == len(right) {
+			// boundary check on second list, append from first list
+			result = append(result, left[leftIndex])
+			leftIndex++
+		} else if left[leftIndex] < right[rightIndex] {
+			// comparison check, append from first list
+			result = append(result, left[leftIndex])
+			leftIndex++
+		} else {
+			// implicit comparison check, append from second list
+			result = append(result, right[rightIndex])
+			rightIndex++
+		}
+	}
+
+	return result
 }
 
 /////////////////////
