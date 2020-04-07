@@ -1,7 +1,6 @@
 package algozone
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -81,9 +80,9 @@ func doMerge(inputList [][]string, inputRound int) (outputList [][]string, outpu
 		outputList = append(outputList, inputList[len(inputList)-1])
 	}
 
-	fmt.Printf("round is %d \n", outputRound)
-	fmt.Printf("operating on %d un-merged lists \n", len(inputList))
-	fmt.Printf("outputing on %d merged lists \n", len(outputList))
+	// fmt.Printf("round is %d \n", outputRound)
+	// fmt.Printf("operating on %d un-merged lists \n", len(inputList))
+	// fmt.Printf("outputing on %d merged lists \n", len(outputList))
 
 	// recurse!
 	if len(outputList) != 1 {
