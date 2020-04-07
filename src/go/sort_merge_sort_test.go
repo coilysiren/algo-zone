@@ -66,23 +66,14 @@ func merge(left []string, right []string) (result []string) {
 			leftIndex++
 		} else if left[leftIndex] < right[rightIndex] {
 			// comparison check, append from first list
-			// fmt.Printf("putting item one \n")
 			result = append(result, left[leftIndex])
 			leftIndex++
 		} else {
 			// implicit comparison check, append from second list
-			// fmt.Printf("putting item two \n")
 			result = append(result, right[rightIndex])
 			rightIndex++
 		}
 	}
-
-	// fmt.Printf("\tfirst  list index is %d \n", leftIndex)
-	// fmt.Printf("\tsecond list index is %d \n", rightIndex)
-	// fmt.Printf("\tcondition one is %t \n", (leftIndex < len(left)))
-	// fmt.Printf("\tcondition two is %t \n", (rightIndex < len(right)))
-	// fmt.Printf("\tpair condition is is %t \n", (leftIndex < len(left)) && (rightIndex < len(right)))
-	// fmt.Printf("pair size is %d \n", len(result))
 
 	return result
 }
