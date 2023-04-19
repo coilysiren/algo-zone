@@ -1,3 +1,3 @@
-module github.com/lynncyrin/algo-zone
+module github.com/coilysiren/algo-zone
 
 go 1.13
