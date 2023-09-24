@@ -1,3 +1,4 @@
+.python-version
 .vscode
 data/sorted_by_*
 src/rust/target/
