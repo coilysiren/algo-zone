@@ -22,7 +22,7 @@ go:
 # https://endoflife.date/ruby
 # https://hub.docker.com/_/ruby
 ruby:
-  dockerImage: ruby:3.3
+  dockerImage: ruby:3.2
   scriptInvoker: ruby
 
 # https://endoflife.date/nodejs
