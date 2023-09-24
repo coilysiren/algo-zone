@@ -1,22 +1,32 @@
+# https://endoflife.date/python
+# https://hub.docker.com/_/python
 python:
   dockerImage: python:3.11
   scriptInvoker: python
 
+# https://releases.rs/
+# https://hub.docker.com/_/rust
 rust:
-  dockerImage: rust:1.69
+  dockerImage: rust:1.72
   scriptInvoker: cargo run --manifest-path ./src/rust/Cargo.toml --bin
   envVars: RUST_BACKTRACE=1
   useShortScriptName: true
 
+# https://endoflife.date/go
+# https://hub.docker.com/_/golang
 go:
-  dockerImage: golang:1.20
+  dockerImage: golang:1.21
   scriptInvoker: go test
   scriptSuffix: ./src/go/helpers.go
 
+# https://endoflife.date/ruby
+# https://hub.docker.com/_/ruby
 ruby:
   dockerImage: ruby:3.2
   scriptInvoker: ruby
 
+# https://endoflife.date/nodejs
+# https://hub.docker.com/_/node/
 js:
-  dockerImage: node:20.0
+  dockerImage: node:20
   scriptInvoker: node
