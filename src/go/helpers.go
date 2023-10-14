@@ -2,19 +2,19 @@ package algozone
 
 import (
 	"fmt"
-	"io/ioutil"
-	"path"
+	"os"
+	"path/filepath"
 	"strings"
 )
 
 type sortFunc func([]string) []string
 
-const randomizedDataPath = "./../../data/randomized.txt"
-const sortedDataPath = "./../../data/sorted.txt"
+var inputPath = os.Getenv("INPUT_PATH")
+var outputPath = os.Getenv("OUTPUT_PATH")
 
 func getInputList() (inputList []string, err error) {
 	// read input file
-	fileBytes, err := ioutil.ReadFile(randomizedDataPath)
+	fileBytes, err := os.ReadFile(filepath.Join("..", "..", inputPath))
 	if err != nil {
 		err = fmt.Errorf("error reading input file path: %w", err)
 		return nil, err
@@ -31,7 +31,7 @@ func getInputList() (inputList []string, err error) {
 
 func writeAndCompareOutputList(outputList []string, filename string) (err error) {
 	// setup
-	filePath := path.Join(sortedDataPath, "..", filename+".txt")
+	filePath := filepath.Join("..", "..", outputPath, "..", filename+".txt")
 
 	// clean data
 	outputString := strings.Join(outputList, "\n")
@@ -43,7 +43,7 @@ func writeAndCompareOutputList(outputList []string, filename string) (err error)
 	outputString += "\n"
 	outputBytes := []byte(outputString)
 	// write file finally
-	err = ioutil.WriteFile(filePath, outputBytes, 0644)
+	err = os.WriteFile(filePath, outputBytes, 0644)
 	if err != nil {
 		err = fmt.Errorf("error writing output: %w", err)
 		return err
