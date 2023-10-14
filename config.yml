@@ -7,7 +7,7 @@ python:
 # https://releases.rs/
 # https://hub.docker.com/_/rust
 rust:
-  dockerImage: rust:1.72
+  dockerImage: rust:1.73
   scriptInvoker: cargo run --manifest-path ./src/rust/Cargo.toml --bin
   envVars: RUST_BACKTRACE=1
   useShortScriptName: true
@@ -30,3 +30,9 @@ ruby:
 js:
   dockerImage: node:20
   scriptInvoker: node
+
+# https://endoflife.date/oracle-jdk
+# https://hub.docker.com/_/amazoncorretto
+java:
+  dockerImage: amazoncorretto:21
+  scriptInvoker: java bla bla bla
