@@ -23,15 +23,15 @@ func getInputList() (inputList []string, err error) {
 
 	// clean input data
 	if fileSlice[len(fileSlice)-1] == "" {
-		fileSlice = fileSlice[:len(fileSlice)]
+		fileSlice = fileSlice[:len(fileSlice)-1]
 	}
 
 	return fileSlice, nil
 }
 
-func writeAndCompareOutputList(outputList []string, filename string) (err error) {
+func writeAndCompareOutputList(outputList []string) (err error) {
 	// setup
-	filePath := filepath.Join("..", "..", outputPath, "..", filename+".txt")
+	filePath := filepath.Join("..", "..", outputPath)
 
 	// clean data
 	outputString := strings.Join(outputList, "\n")

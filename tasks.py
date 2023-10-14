@@ -37,7 +37,7 @@ def clean_string(inp):
 @dataclasses.dataclass
 class TestRunnerContext:
     script_name: str
-    subprocess_args: list
+    subprocess_args: str
     script_relative_path: str
     script_output_file_path: str
     script_output_file_name: str
