@@ -5,6 +5,7 @@ import os
 import sys
 import dataclasses
 import json
+import time
 
 # 3rd party packages
 import yaml
@@ -180,7 +181,15 @@ class TestRunner:
                     os.remove(ctx.script_output_file_path)
 
                 # run the script
+                start_time = time.time()
                 output = self.ctx.run(ctx.subprocess_args, echo=True, pty=True)
+                end_time = time.time()
+
+                # report timing
+                # we round the number so humans dont over-index on small differences
+                print(
+                    f'\t⏱  script "{ctx.script_relative_path}" run for {round(end_time - start_time, 2)} seconds'
+                )
 
                 # check if the script invoke failed
                 if output.exited != 0:
