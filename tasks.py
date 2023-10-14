@@ -60,15 +60,20 @@ class TestRunnerContext:
         script_name_split_on_dot = script_name_with_file_type.split(".")
         self.script_name = script_name_split_on_dot[0]
 
+        # given "sort_builtin" => return "sort"
+        script_type = self.script_name.split("_")[0]
+
         # this path is used in various places later
         self.script_relative_path = f"./src/{language}/{script_name_with_file_type}"
 
         # get the path of the file that's been prepared in advance
         # and has the output we would be expecting from out script
-        self.prepared_file_path = f"{data_folder_path}/sorted.txt"
+        self.prepared_file_path = f"{data_folder_path}/{script_type}_output.txt"
 
         # our scripts write their output files to this path
-        self.script_output_file_name = f"sorted_by_{language}_{self.script_name}.txt"
+        self.script_output_file_name = (
+            f"output_{script_type}_via_{language}_{self.script_name}.txt"
+        )
         self.script_output_file_path = (
             f"{data_folder_path}/{self.script_output_file_name}"
         )
@@ -101,7 +106,7 @@ class TestRunnerContext:
 
         # construct ending call args
         self.subprocess_args += [
-            f"-e=INPUT_PATH={data_folder_path}/randomized.txt",
+            f"-e=INPUT_PATH={data_folder_path}/{script_type}_input.txt",
             f"-e=OUTPUT_PATH={self.script_output_file_path}",
             config["dockerImage"],
             *script_invoker,

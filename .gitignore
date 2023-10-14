@@ -1,5 +1,7 @@
 .python-version
 .vscode
+data/output*
+data/sort_by_*
 data/sorted_by_*
 src/rust/target/
 __pycache__/
