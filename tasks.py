@@ -14,22 +14,22 @@ def inputs_are_truthy_and_different(first, second):
     # check if inputs are truthy
     if (not first) or (not second):
         return False
-    # cleanup
-    first_cleaned = clean_string(first)
-    second_cleaned = clean_string(second)
     # allow for wildcard matching
     wildcard_keyword = "any"
-    if (first_cleaned == wildcard_keyword) or (second_cleaned == wildcard_keyword):
+    if (first == wildcard_keyword) or (second == wildcard_keyword):
         return False
     # check if inputs are different
-    if first_cleaned != second_cleaned:
+    if first != second:
         return True
     return False
 
 
 def clean_string(inp):
-    for element in ["-", "_", "test", "sort"]:
-        inp = inp.replace(element, "")
+    """remove unwanted characters from a string"""
+    if inp:
+        inp = inp.lower().strip()
+        for element in ["-", "_", "test", "sort"]:
+            inp = inp.replace(element, "")
     return inp
 
 
@@ -96,8 +96,7 @@ class TestRunnerContext:
         ]
 
         # construct env vars CLI args
-        env_vars = config.get("env_vars", "")
-        if env_vars != "":
+        if env_vars := config.get("env_vars"):
             self.subprocess_args.append(f"-e={env_vars}")
 
         # construct ending call args
@@ -125,13 +124,17 @@ class TestRunner:
 
             # if an input script was passed in, and this script is not that input script
             # then continue on to the next script
-            if inputs_are_truthy_and_different(input_script, ctx.script_name):
+            if inputs_are_truthy_and_different(
+                clean_string(input_script),
+                clean_string(ctx.script_name),
+            ):
                 continue
 
             # if an old script output file already exists, remove it
             if os.path.isfile(ctx.script_output_file_path):
                 os.remove(ctx.script_output_file_path)
 
+            # run the script
             status = subprocess.call(ctx.subprocess_args)
 
             # check if the script invoke failed

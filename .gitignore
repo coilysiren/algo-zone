@@ -2,3 +2,4 @@
 .vscode
 data/sorted_by_*
 src/rust/target/
+__pycache__/

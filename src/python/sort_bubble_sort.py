@@ -1,12 +1,9 @@
-import os
-import sys
-from typing import List
+import helpers
 
 
 #####################
 # sort script start #
 #####################
-
 
 # bubble sort!
 #
@@ -21,13 +18,13 @@ def do_sorting(input_list):
 
 
 # bubble_sort is the top level function responsible for ... bubble sorting!
-def bubble_sort(input_list: List[str]) -> List[str]:
+def bubble_sort(input_list: list[str]) -> list[str]:
     # set defaults
     output_list = input_list
     is_sorted = False
 
     # continuously do sorting rounds as long as the list remains unsorted
-    while is_sorted == False:
+    while is_sorted is False:
         output_list, is_sorted = do_sorting_round(output_list)
 
     # mission accomplished! ✨
@@ -35,13 +32,12 @@ def bubble_sort(input_list: List[str]) -> List[str]:
 
 
 # do_sorting_round does the "actual sorting"
-def do_sorting_round(input_list: List[str]) -> (List[str], bool):
+def do_sorting_round(input_list: list[str]) -> (list[str], bool):
     # set defaults
     output_list = []
     is_sorted = True
 
     for index, element in enumerate(input_list):
-
         # we compare (index VS index - 1) so there's
         # nothing to compare when looking at the 0th index
         if index == 0:
@@ -71,21 +67,4 @@ def do_sorting_round(input_list: List[str]) -> (List[str], bool):
 # 👇🏽 copy pasted helpers
 
 if __name__ == "__main__":
-    # read input file
-    inputFilePath = os.getenv("INPUT_PATH")
-    with open(inputFilePath, "r") as inputFileObject:
-        inputFileData = inputFileObject.readlines()
-
-    # clean input data
-    cleanedInputData = []
-    for element in inputFileData:
-        cleanedInputData.append(element.strip())
-
-    # do sorting
-    sortedData = do_sorting(cleanedInputData)
-
-    # write output file
-    outputFilePath = os.getenv("OUTPUT_PATH")
-    with open(outputFilePath, "w") as outputFileObject:
-        for element in sortedData:
-            outputFileObject.write(element + "\n")
+    helpers.run(do_sorting)
