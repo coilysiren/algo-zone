@@ -3,14 +3,20 @@
 python:
   dockerImage: python:3.11
   scriptInvoker: python
+  ignoreFiles:
+    - __init__.py
+    - helpers.py
 
 # https://releases.rs/
 # https://hub.docker.com/_/rust
 rust:
-  dockerImage: rust:1.72
+  dockerImage: rust:1.73
   scriptInvoker: cargo run --manifest-path ./src/rust/Cargo.toml --bin
   envVars: RUST_BACKTRACE=1
   useShortScriptName: true
+  ignoreFiles:
+    - Cargo.lock
+    - Cargo.toml
 
 # https://endoflife.date/go
 # https://hub.docker.com/_/golang
@@ -18,6 +24,9 @@ go:
   dockerImage: golang:1.21
   scriptInvoker: go test
   scriptSuffix: ./src/go/helpers.go
+  ignoreFiles:
+    - go.mod
+    - helpers.go
 
 # https://endoflife.date/ruby
 # https://hub.docker.com/_/ruby
@@ -30,3 +39,10 @@ ruby:
 js:
   dockerImage: node:20
   scriptInvoker: node
+
+# TODO: not yet implemented
+# https://endoflife.date/oracle-jdk
+# https://hub.docker.com/_/amazoncorretto
+java:
+  dockerImage: amazoncorretto:21
+  scriptInvoker: java bla bla bla

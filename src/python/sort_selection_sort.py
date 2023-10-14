@@ -1,6 +1,4 @@
-import os
-import sys
-from typing import List
+import helpers
 
 
 #####################
@@ -31,7 +29,6 @@ def selection_sort(input_list):
     #   stop list iteration early because of you popping an element
     #   out of the list
     for _ in range(len(unsorted_elements)):
-
         # print("--- for _ in unsorted_elements: ---")
         # print(f"unsorted_elements => {unsorted_elements}")
         # print(f"sorted_elements => {sorted_elements}")
@@ -63,21 +60,4 @@ def find_smallest_index(input_list):
 # 👇🏽 copy pasted helpers
 
 if __name__ == "__main__":
-    # read input file
-    inputFilePath = os.getenv("INPUT_PATH")
-    with open(inputFilePath, "r") as inputFileObject:
-        inputFileData = inputFileObject.readlines()
-
-    # clean input data
-    cleanedInputData = []
-    for element in inputFileData:
-        cleanedInputData.append(element.strip())
-
-    # do sorting
-    sortedData = do_sorting(cleanedInputData)
-
-    # write output file
-    outputFilePath = os.getenv("OUTPUT_PATH")
-    with open(outputFilePath, "w") as outputFileObject:
-        for element in sortedData:
-            outputFileObject.write(element + "\n")
+    helpers.run(do_sorting)
