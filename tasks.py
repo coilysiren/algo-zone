@@ -38,7 +38,8 @@ def clean_string(inp):
 @dataclasses.dataclass
 class TestRunnerContext:
     script_name: str
-    subprocess_args: str
+    docker_pull: str
+    docker_run_test: str
     script_relative_path: str
     script_output_file_path: str
     script_output_file_name: str
@@ -120,7 +121,7 @@ class TestRunnerContexts:
             script_to_invoke = script_name
 
         # construction initial call args
-        subprocess_list = [
+        docker_run_test_list = [
             "docker",
             "run",
             f"--volume={self.base_directory}:/workdir",
@@ -129,10 +130,10 @@ class TestRunnerContexts:
 
         # construct env vars CLI args
         if env_vars := config.get("env_vars"):
-            subprocess_list.append(f"-e={env_vars}")
+            docker_run_test_list.append(f"-e={env_vars}")
 
         # construct ending call args
-        subprocess_list += [
+        docker_run_test_list += [
             f"-e=INPUT_PATH={self.data_folder_path}/{script_type}_input.txt",
             f"-e=OUTPUT_PATH={script_output_file_path}",
             config["dockerImage"],
@@ -140,12 +141,16 @@ class TestRunnerContexts:
             script_to_invoke,
             config.get("scriptSuffix", ""),
         ]
-        subprocess_args = " ".join(subprocess_list)
+        docker_run_test = " ".join(docker_run_test_list)
+
+        # construct docker pull command
+        docker_pull = f"docker pull --quiet {config['dockerImage']}"
 
         # return the fully constructed context
         return TestRunnerContext(
             script_name=script_name,
-            subprocess_args=subprocess_args,
+            docker_pull=docker_pull,
+            docker_run_test=docker_run_test,
             script_relative_path=script_relative_path,
             script_output_file_path=script_output_file_path,
             script_output_file_name=script_output_file_name,
@@ -180,9 +185,15 @@ class TestRunner:
                 if os.path.isfile(ctx.script_output_file_path):
                     os.remove(ctx.script_output_file_path)
 
+                # Pull the docker image if we are in CI.
+                # We only do this in CI it helps with getting consistent timing in that context.
+                # When running locally, you get consistent timing by running the script twice.
+                if os.getenv("CI"):
+                    self.ctx.run(ctx.docker_pull, echo=True, pty=True)
+
                 # run the script
                 start_time = time.time()
-                output = self.ctx.run(ctx.subprocess_args, echo=True, pty=True)
+                output = self.ctx.run(ctx.docker_run_test, echo=True, pty=True)
                 end_time = time.time()
 
                 # report timing
