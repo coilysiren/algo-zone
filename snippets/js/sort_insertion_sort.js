@@ -38,3 +38,4 @@ function swapWithPrevious(list, idx) {
   list[idx - 1] = list[idx];
   list[idx] = tmp;
   return list;
+}

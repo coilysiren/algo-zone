@@ -45,3 +45,4 @@ function findSmallestIndex(inputList) {
   });
 
   return smallestIndex;
+}

@@ -43,3 +43,4 @@ class Array
   def swap(idx)
     self[idx], self[idx - 1] = self[idx - 1], self[idx]
   end
+end

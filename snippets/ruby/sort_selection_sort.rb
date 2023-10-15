@@ -44,3 +44,4 @@ def find_smallest_index(input_list)
   end
 
   smallest_index
+end

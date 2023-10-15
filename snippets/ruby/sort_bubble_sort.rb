@@ -32,3 +32,4 @@ def do_sorting_round(input_list)
   end
 
   [output_list, is_sorted]
+end

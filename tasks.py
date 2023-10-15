@@ -162,22 +162,24 @@ class TestRunnerContexts:
         # the start line is the location of the start text, plus 3 lines
         # the end line is the location of the end text, minus 3 lines
         snippet_start_line = 0
+        snippet_start_line_offset = 3
         snippet_end_line = 0
+        snippet_end_line_offset = 2
         for idx, line in enumerate(script_contents):
             if self.snippet_start_text in line:
                 if snippet_start_line != 0:
                     raise Exception(
                         f'Found multiple "{self.snippet_start_text}" lines in {script_relative_path}.\n'
-                        f"The text with found on lines {snippet_start_line - 2} and {idx + 1}."
+                        f"The text with found on lines {snippet_start_line - snippet_start_line_offset + 1} and {idx + 1}."
                     )
                 snippet_start_line = idx + 3
             if self.snippet_end_text in line:
                 if snippet_end_line != 0:
                     raise Exception(
                         f'Found multiple "{self.snippet_end_text}" lines in {script_relative_path}.\n'
-                        f"The text with found on lines {snippet_end_line + 4} and {idx + 1}."
+                        f"The text with found on lines {snippet_end_line + snippet_end_line_offset + 1} and {idx + 1}."
                     )
-                snippet_end_line = idx - 3
+                snippet_end_line = idx - snippet_end_line_offset
         if snippet_start_line == 0:
             raise Exception(
                 f'could not find the text "{self.snippet_start_text}" in {script_relative_path}'

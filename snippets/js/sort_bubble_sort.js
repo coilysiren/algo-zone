@@ -32,3 +32,4 @@ function doSortingRound(inputList) {
   });
 
   return outputList, isSorted;
+}
