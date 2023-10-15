@@ -1,13 +1,3 @@
-package algozone
-
-import (
-	"testing"
-)
-
-//////////////////////////
-// business logic start //
-//////////////////////////
-
 // selection sort!
 //
 // docs: https://en.wikipedia.org/wiki/Selection_sort
@@ -44,27 +34,4 @@ func findSmallestIndex(inputList []string) (smallestIndex int) {
 func removeIndex(inputList []string, index int) (outputList []string) {
 	outputList = append(inputList[:index], inputList[index+1:]...)
 	return outputList
-}
-
-////////////////////////
-// business logic end //
-////////////////////////
-
-func TestSelectionSort(t *testing.T) {
-	t.Run("test", func(t *testing.T) {
-		// setup
-		inputList, err := getInputList()
-		if err != nil {
-			t.Error(err.Error())
-		}
-
-		// logic under test
-		outputList := selectionSort(inputList)
-
-		// assertions
-		err = writeAndCompareOutputList(outputList)
-		if err != nil {
-			t.Error(err.Error())
-		}
-	})
 }

@@ -1,9 +1,3 @@
-# frozen_string_literal: true
-
-########################
-# business logic start #
-########################
-
 # insertion sort!
 #
 # docs: https://en.wikipedia.org/wiki/Insertion_sort
@@ -50,17 +44,3 @@ class Array
     self[idx], self[idx - 1] = self[idx - 1], self[idx]
   end
 end
-
-######################
-# business logic end #
-######################
-
-# 👇🏽 copy pasted helpers
-
-input_file_path = ENV['INPUT_PATH']
-input_file = File.readlines(input_file_path)
-
-sorted_data = do_sorting(input_file)
-
-output_file_path = ENV['OUTPUT_PATH']
-File.open(output_file_path, 'wb') { |f| f.write(sorted_data.join('')) }

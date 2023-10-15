@@ -1,13 +1,3 @@
-package algozone
-
-import (
-	"testing"
-)
-
-//////////////////////////
-// business logic start //
-//////////////////////////
-
 // insertion sort!
 //
 // docs: https://en.wikipedia.org/wiki/Insertion_sort
@@ -41,27 +31,4 @@ func sortElementAtIndex(inputList []string, element string, idx int) (outputList
 func swapWithPrevious(list []string, idx int) []string {
 	list[idx], list[idx-1] = list[idx-1], list[idx]
 	return list
-}
-
-////////////////////////
-// business logic end //
-////////////////////////
-
-func TestInsertionSort(t *testing.T) {
-	t.Run("test", func(t *testing.T) {
-		// setup
-		inputList, err := getInputList()
-		if err != nil {
-			t.Error(err.Error())
-		}
-
-		// logic under test
-		outputList := insertionSort(inputList)
-
-		// assertions
-		err = writeAndCompareOutputList(outputList)
-		if err != nil {
-			t.Error(err.Error())
-		}
-	})
 }

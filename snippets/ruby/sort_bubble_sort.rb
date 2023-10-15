@@ -1,9 +1,3 @@
-# frozen_string_literal: true
-
-########################
-# business logic start #
-########################
-
 def do_sorting(input_list)
   bubble_sort(input_list)
 end
@@ -39,17 +33,3 @@ def do_sorting_round(input_list)
 
   [output_list, is_sorted]
 end
-
-######################
-# business logic end #
-######################
-
-# 👇🏽 copy pasted helpers
-
-input_file_path = ENV['INPUT_PATH']
-input_file = File.readlines(input_file_path)
-
-sorted_data = do_sorting(input_file)
-
-output_file_path = ENV['OUTPUT_PATH']
-File.open(output_file_path, 'wb') { |f| f.write(sorted_data.join('')) }

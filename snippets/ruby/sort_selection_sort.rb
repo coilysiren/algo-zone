@@ -1,9 +1,3 @@
-# frozen_string_literal: true
-
-########################
-# business logic start #
-########################
-
 # selection sort!
 #
 # docs: https://en.wikipedia.org/wiki/Selection_sort
@@ -51,17 +45,3 @@ def find_smallest_index(input_list)
 
   smallest_index
 end
-
-######################
-# business logic end #
-######################
-
-# 👇🏽 copy pasted helpers
-
-input_file_path = ENV['INPUT_PATH']
-input_file = File.readlines(input_file_path)
-
-sorted_data = do_sorting(input_file)
-
-output_file_path = ENV['OUTPUT_PATH']
-File.open(output_file_path, 'wb') { |f| f.write(sorted_data.join('')) }

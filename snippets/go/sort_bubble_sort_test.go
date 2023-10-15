@@ -1,13 +1,3 @@
-package algozone
-
-import (
-	"testing"
-)
-
-//////////////////////////
-// business logic start //
-//////////////////////////
-
 // bubble sort!
 //
 // docs: https://en.wikipedia.org/wiki/Bubble_sort
@@ -57,27 +47,4 @@ func doSortingRound(inputList []string) (outputList []string, isSorted bool) {
 	}
 
 	return outputList, isSorted
-}
-
-////////////////////////
-// business logic end //
-////////////////////////
-
-func TestBubbleSort(t *testing.T) {
-	t.Run("test", func(t *testing.T) {
-		// setup
-		inputList, err := getInputList()
-		if err != nil {
-			t.Error(err.Error())
-		}
-
-		// logic under test
-		outputList := bubbleSort(inputList)
-
-		// assertions
-		err = writeAndCompareOutputList(outputList)
-		if err != nil {
-			t.Error(err.Error())
-		}
-	})
 }

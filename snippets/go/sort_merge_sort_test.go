@@ -1,13 +1,3 @@
-package algozone
-
-import (
-	"testing"
-)
-
-//////////////////////////
-// business logic start //
-//////////////////////////
-
 // merge sort!
 //
 // docs: https://leetcode.com/explore/learn/card/recursion-ii/470/divide-and-conquer/2868/
@@ -76,27 +66,4 @@ func merge(left []string, right []string) (result []string) {
 	}
 
 	return result
-}
-
-////////////////////////
-// business logic end //
-////////////////////////
-
-func TestMergeSort(t *testing.T) {
-	t.Run("test", func(t *testing.T) {
-		// setup
-		inputList, err := getInputList()
-		if err != nil {
-			t.Error(err.Error())
-		}
-
-		// logic under test
-		outputList := MergeSort(inputList)
-
-		// assertions
-		err = writeAndCompareOutputList(outputList)
-		if err != nil {
-			t.Error(err.Error())
-		}
-	})
 }

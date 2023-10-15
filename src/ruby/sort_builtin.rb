@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-#####################
-# sort script start #
-#####################
+########################
+# business logic start #
+########################
 
 def do_sorting(input_list)
   output_list = input_list
@@ -10,9 +10,9 @@ def do_sorting(input_list)
   output_list
 end
 
-###################
-# sort script end #
-###################
+######################
+# business logic end #
+######################
 
 # 👇🏽 copy pasted helpers
 

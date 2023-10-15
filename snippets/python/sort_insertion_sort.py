@@ -1,10 +1,3 @@
-import helpers
-
-
-########################
-# business logic start #
-########################
-
 # insertion sort!
 #
 # docs: https://en.wikipedia.org/wiki/Insertion_sort
@@ -42,10 +35,3 @@ def insert_element(input_list: list[str], element: str, index: int) -> list[str]
 
     return output_list
 
-
-######################
-# business logic end #
-######################
-
-if __name__ == "__main__":
-    helpers.run(do_sorting)
