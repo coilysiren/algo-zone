@@ -1,8 +1,8 @@
-var fs = require('fs');
+var fs = require("fs");
 
-///////////////////////
-// sort script start //
-///////////////////////
+//////////////////////////
+// business logic start //
+//////////////////////////
 
 function doSorting(inputList) {
   return bubbleSort(inputList);
@@ -13,10 +13,10 @@ function bubbleSort(inputList) {
   isSorted = false;
 
   while (isSorted === false) {
-    outputList, isSorted = doSortingRound(outputList);
+    outputList, (isSorted = doSortingRound(outputList));
   }
 
-  return outputList
+  return outputList;
 }
 
 function doSortingRound(inputList) {
@@ -31,7 +31,7 @@ function doSortingRound(inputList) {
       outputList.pop();
       outputList.push(element);
       outputList.push(previousElement);
-      isSorted = false
+      isSorted = false;
     } else {
       outputList.push(element);
     }
@@ -40,15 +40,15 @@ function doSortingRound(inputList) {
   return outputList, isSorted;
 }
 
-/////////////////////
-// sort script end //
-/////////////////////
+////////////////////////
+// business logic end //
+////////////////////////
 
 // 👇🏽 copy pasted helpers
 
 // read input file
 let inputFilePath = process.env.INPUT_PATH;
-let inputString = fs.readFileSync(inputFilePath, 'utf8');
+let inputString = fs.readFileSync(inputFilePath, "utf8");
 let inputStringSplit = inputString.split(/\n/);
 
 // clean input data

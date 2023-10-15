@@ -4,9 +4,9 @@ import (
 	"testing"
 )
 
-///////////////////////
-// sort script start //
-///////////////////////
+//////////////////////////
+// business logic start //
+//////////////////////////
 
 // bubble sort!
 //
@@ -59,9 +59,9 @@ func doSortingRound(inputList []string) (outputList []string, isSorted bool) {
 	return outputList, isSorted
 }
 
-/////////////////////
-// sort script end //
-/////////////////////
+////////////////////////
+// business logic end //
+////////////////////////
 
 func TestBubbleSort(t *testing.T) {
 	t.Run("test", func(t *testing.T) {

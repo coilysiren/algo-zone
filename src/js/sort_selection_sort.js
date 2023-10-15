@@ -1,8 +1,8 @@
-var fs = require('fs');
+var fs = require("fs");
 
-///////////////////////
-// sort script start //
-///////////////////////
+//////////////////////////
+// business logic start //
+//////////////////////////
 
 // selection sort!
 //
@@ -53,15 +53,15 @@ function findSmallestIndex(inputList) {
   return smallestIndex;
 }
 
-/////////////////////
-// sort script end //
-/////////////////////
+////////////////////////
+// business logic end //
+////////////////////////
 
 // 👇🏽 copy pasted helpers
 
 // read input file
 let inputFilePath = process.env.INPUT_PATH;
-let inputString = fs.readFileSync(inputFilePath, 'utf8');
+let inputString = fs.readFileSync(inputFilePath, "utf8");
 let inputStringSplit = inputString.split(/\n/);
 
 // clean input data

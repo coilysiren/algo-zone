@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-#####################
-# sort script start #
-#####################
+########################
+# business logic start #
+########################
 
 def do_sorting(input_list)
   bubble_sort(input_list)
@@ -40,9 +40,9 @@ def do_sorting_round(input_list)
   [output_list, is_sorted]
 end
 
-###################
-# sort script end #
-###################
+######################
+# business logic end #
+######################
 
 # 👇🏽 copy pasted helpers
 

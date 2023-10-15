@@ -1,8 +1,8 @@
-var fs = require('fs');
+var fs = require("fs");
 
-///////////////////////
-// sort script start //
-///////////////////////
+//////////////////////////
+// business logic start //
+//////////////////////////
 
 // insertion sort!
 //
@@ -20,44 +20,41 @@ function insertionSort(inputList) {
   outputList = [];
 
   inputList.forEach((element, idx) => {
-    outputList.push(element)
-    outputList = sortElementAtIndex(outputList, element, idx)
+    outputList.push(element);
+    outputList = sortElementAtIndex(outputList, element, idx);
   });
 
-  return outputList
+  return outputList;
 }
 
 function sortElementAtIndex(inputList, element, idx) {
   target_index = idx;
   outputList = inputList;
 
-  while (
-    (target_index != 0) &&
-    (element < outputList[target_index - 1])
-  ) {
-    swapWithPrevious(outputList, target_index)
-    target_index -= 1
+  while (target_index != 0 && element < outputList[target_index - 1]) {
+    swapWithPrevious(outputList, target_index);
+    target_index -= 1;
   }
 
-  return outputList
+  return outputList;
 }
 
 function swapWithPrevious(list, idx) {
-  tmp = list[idx - 1]
-  list[idx - 1] = list[idx]
-  list[idx] = tmp
-  return list
+  tmp = list[idx - 1];
+  list[idx - 1] = list[idx];
+  list[idx] = tmp;
+  return list;
 }
 
-/////////////////////
-// sort script end //
-/////////////////////
+////////////////////////
+// business logic end //
+////////////////////////
 
 // 👇🏽 copy pasted helpers
 
 // read input file
 let inputFilePath = process.env.INPUT_PATH;
-let inputString = fs.readFileSync(inputFilePath, 'utf8');
+let inputString = fs.readFileSync(inputFilePath, "utf8");
 let inputStringSplit = inputString.split(/\n/);
 
 // clean input data

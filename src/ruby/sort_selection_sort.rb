@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-#####################
-# sort script start #
-#####################
+########################
+# business logic start #
+########################
 
 # selection sort!
 #
@@ -52,9 +52,9 @@ def find_smallest_index(input_list)
   smallest_index
 end
 
-###################
-# sort script end #
-###################
+######################
+# business logic end #
+######################
 
 # 👇🏽 copy pasted helpers
 

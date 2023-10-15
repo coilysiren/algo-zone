@@ -1,10 +1,3 @@
-import helpers
-
-
-########################
-# business logic start #
-########################
-
 # selection sort!
 #
 # docs: https://en.wikipedia.org/wiki/Selection_sort
@@ -51,11 +44,3 @@ def find_smallest_index(input_list):
             smallest_index = index
 
     return smallest_index
-
-
-######################
-# business logic end #
-######################
-
-if __name__ == "__main__":
-    helpers.run(do_sorting)

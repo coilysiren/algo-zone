@@ -4,9 +4,9 @@ import (
 	"testing"
 )
 
-///////////////////////
-// sort script start //
-///////////////////////
+//////////////////////////
+// business logic start //
+//////////////////////////
 
 // insertion sort!
 //
@@ -43,9 +43,9 @@ func swapWithPrevious(list []string, idx int) []string {
 	return list
 }
 
-/////////////////////
-// sort script end //
-/////////////////////
+////////////////////////
+// business logic end //
+////////////////////////
 
 func TestInsertionSort(t *testing.T) {
 	t.Run("test", func(t *testing.T) {

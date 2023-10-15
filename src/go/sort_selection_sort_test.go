@@ -4,9 +4,9 @@ import (
 	"testing"
 )
 
-///////////////////////
-// sort script start //
-///////////////////////
+//////////////////////////
+// business logic start //
+//////////////////////////
 
 // selection sort!
 //
@@ -46,9 +46,9 @@ func removeIndex(inputList []string, index int) (outputList []string) {
 	return outputList
 }
 
-/////////////////////
-// sort script end //
-/////////////////////
+////////////////////////
+// business logic end //
+////////////////////////
 
 func TestSelectionSort(t *testing.T) {
 	t.Run("test", func(t *testing.T) {

@@ -1,10 +1,3 @@
-import helpers
-
-
-########################
-# business logic start #
-########################
-
 # bubble sort!
 #
 # docs: https://en.wikipedia.org/wiki/Bubble_sort
@@ -58,11 +51,3 @@ def do_sorting_round(input_list: list[str]) -> (list[str], bool):
             output_list.append(element)
 
     return output_list, is_sorted
-
-
-######################
-# business logic end #
-######################
-
-if __name__ == "__main__":
-    helpers.run(do_sorting)

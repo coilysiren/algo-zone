@@ -5,9 +5,9 @@ import (
 	"testing"
 )
 
-///////////////////////
-// sort script start //
-///////////////////////
+//////////////////////////
+// business logic start //
+//////////////////////////
 
 func builtinSort(inputList []string) (outputList []string) {
 	outputList = inputList
@@ -15,9 +15,9 @@ func builtinSort(inputList []string) (outputList []string) {
 	return outputList
 }
 
-/////////////////////
-// sort script end //
-/////////////////////
+////////////////////////
+// business logic end //
+////////////////////////
 
 func TestBuiltinSort(t *testing.T) {
 	t.Run("test", func(t *testing.T) {

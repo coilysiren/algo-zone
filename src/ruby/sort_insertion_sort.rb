@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-#####################
-# sort script start #
-#####################
+########################
+# business logic start #
+########################
 
 # insertion sort!
 #
@@ -51,9 +51,9 @@ class Array
   end
 end
 
-###################
-# sort script end #
-###################
+######################
+# business logic end #
+######################
 
 # 👇🏽 copy pasted helpers
 

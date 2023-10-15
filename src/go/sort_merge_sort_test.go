@@ -4,9 +4,9 @@ import (
 	"testing"
 )
 
-///////////////////////
-// sort script start //
-///////////////////////
+//////////////////////////
+// business logic start //
+//////////////////////////
 
 // merge sort!
 //
@@ -78,9 +78,9 @@ func merge(left []string, right []string) (result []string) {
 	return result
 }
 
-/////////////////////
-// sort script end //
-/////////////////////
+////////////////////////
+// business logic end //
+////////////////////////
 
 func TestMergeSort(t *testing.T) {
 	t.Run("test", func(t *testing.T) {
