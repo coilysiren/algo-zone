@@ -315,13 +315,16 @@ class TestRunner:
 
                 # check if there are unsaved changes on the snippet
                 self.invoke.run("git add snippets")
-                output = self.invoke.run("git diff --cached --exit-code", warn=True)
+                output = self.invoke.run(
+                    f"git diff --cached --exit-code snippets/{ctx.language}/{ctx.script_name_with_file_type}",
+                    warn=True,
+                )
 
                 # Check if there are unsaved changes on the snippets.
                 if output.exited != 0:
                     self.set_success_status(False)
                     print(
-                        f"\n\t🔴 snippets/{ctx.language}/{ctx.script_name_with_file_type} has unsaved changes\n"
+                        f"🔴 snippets/{ctx.language}/{ctx.script_name_with_file_type} has uncommitted changes"
                     )
 
             # catch any errors, mark the test as failed, and continue
