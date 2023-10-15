@@ -34,3 +34,4 @@ fn do_sorting_round(input_list: Vec<&str>) -> (Vec<&str>, bool) {
     }
 
     return (output_list, is_sorted);
+}

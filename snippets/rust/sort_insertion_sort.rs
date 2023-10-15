@@ -25,3 +25,4 @@ fn insertion_sort(input_list: Vec<&str>) -> Vec<&str> {
     }
 
     return output_list;
+}

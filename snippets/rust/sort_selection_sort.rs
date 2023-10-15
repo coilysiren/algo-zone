@@ -34,3 +34,4 @@ fn find_smallest_index(input_list: &Vec<&str>) -> usize {
     }
 
     return smallest_index;
+}

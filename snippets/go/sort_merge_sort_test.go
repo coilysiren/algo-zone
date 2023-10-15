@@ -66,3 +66,4 @@ func merge(left []string, right []string) (result []string) {
 	}
 
 	return result
+}

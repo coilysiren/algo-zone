@@ -34,3 +34,4 @@ def insert_element(input_list: list[str], element: str, index: int) -> list[str]
         target_index = target_index - 1
 
     return output_list
+

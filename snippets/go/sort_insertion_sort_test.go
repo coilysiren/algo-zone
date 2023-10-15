@@ -31,3 +31,4 @@ func sortElementAtIndex(inputList []string, element string, idx int) (outputList
 func swapWithPrevious(list []string, idx int) []string {
 	list[idx], list[idx-1] = list[idx-1], list[idx]
 	return list
+}

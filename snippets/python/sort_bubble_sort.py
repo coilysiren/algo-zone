@@ -51,3 +51,4 @@ def do_sorting_round(input_list: list[str]) -> (list[str], bool):
             output_list.append(element)
 
     return output_list, is_sorted
+

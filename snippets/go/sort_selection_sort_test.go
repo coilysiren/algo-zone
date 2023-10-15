@@ -34,3 +34,4 @@ func findSmallestIndex(inputList []string) (smallestIndex int) {
 func removeIndex(inputList []string, index int) (outputList []string) {
 	outputList = append(inputList[:index], inputList[index+1:]...)
 	return outputList
+}

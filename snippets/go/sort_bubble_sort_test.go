@@ -47,3 +47,4 @@ func doSortingRound(inputList []string) (outputList []string, isSorted bool) {
 	}
 
 	return outputList, isSorted
+}
