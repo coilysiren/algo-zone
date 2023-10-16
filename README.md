@@ -29,11 +29,20 @@ You will get output like so:
 ```bash
 $ invoke test python any
 
-> 🟢 script "./src/python/sort_builtin.py" succeeded
-> 🟢 script "./src/python/sort_bubble_sort.py" succeeded
-> 🟢 script "./src/python/sort_selection_sort.py" succeeded
-> 🟢 script "./src/python/sort_insertion_sort.py" succeeded
-> ✨ script run success ✨
+docker run ...
+  ⏱  ./src/python/sort_builtin.py on ./data/sort_input_0.txt ran for 0.5 seconds
+  🟢 ./src/python/sort_builtin.py on ./data/sort_input_0.txt succeeded
+docker run ...
+  ⏱  ./src/python/sort_bubble_sort.py on ./data/sort_input_0.txt ran for 0.51 seconds
+  🟢 ./src/python/sort_bubble_sort.py on ./data/sort_input_0.txt succeeded
+docker run ...
+  ⏱  ./src/python/sort_selection_sort.py on ./data/sort_input_0.txt ran for 0.58 seconds
+  🟢 ./src/python/sort_selection_sort.py on ./data/sort_input_0.txt succeeded
+docker run ...
+  ⏱  ./src/python/sort_insertion_sort.py on ./data/sort_input_0.txt ran for 0.52 seconds
+  🟢 ./src/python/sort_insertion_sort.py on ./data/sort_input_0.txt succeeded
+
+✨ script run success ✨
 ```
 
 _(note: I will likely not bother to update the above example when the output changes in minor ways)_

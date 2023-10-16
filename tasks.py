@@ -42,10 +42,12 @@ class TestRunnerContext:
     script_name: str
     docker_pull: str
     docker_run_test: str
+    script_type: str
     script_relative_path: str
     script_name_with_file_type: str
     script_output_file_path: str
     script_output_file_name: str
+    input_file_path: str
     prepared_file_path: str
     snippet_start_line: int
     snippet_end_line: int
@@ -73,23 +75,31 @@ class TestRunnerContexts:
         # generate the contexts
         self.ctxs = []
         for script_path in glob.glob(f"{self.base_directory}/src/{language}/*"):
+            # given "src/python/sort_builtin.py" => return "sort"
+            script_type = script_path.split("/")[-1].split("_")[0]
+
             # ignore helpers, metadata files, etc
             if config.get("ignoreFiles") and script_path.split("/")[-1] in config.get(
                 "ignoreFiles"
             ):
                 continue
+
             # ignore directories, generally compiled code
             if not os.path.isfile(script_path):
                 continue
-            # generate a context for this particular script
-            if ctx := self.generate(language, config, script_path):
-                self.ctxs.append(ctx)
+
+            for input_file_path in glob.glob(
+                f"{self.data_folder_path}/{script_type}_input_*.txt"
+            ):
+                # generate a context for this particular script
+                if ctx := self.generate(language, config, script_path, input_file_path):
+                    self.ctxs.append(ctx)
 
     @property
     def data(self):
         return [ctx.data for ctx in self.ctxs]
 
-    def generate(self, language, config, script_path):
+    def generate(self, language, config, script_path, input_file_path):
         # given "src/python/sort_builtin.py" => split on "/" and return "sort_builtin.py"
         script_path_split_on_slash = script_path.split("/")
         script_name_with_file_type = script_path_split_on_slash[-1]
@@ -106,11 +116,14 @@ class TestRunnerContexts:
 
         # get the path of the file that's been prepared in advance
         # and has the output we would be expecting from out script
-        prepared_file_path = f"{self.data_folder_path}/{script_type}_output.txt"
+        prepared_file_path = input_file_path.replace("input", "output")
+
+        # given "data/sort_input_1.txt" => return "1"
+        prepared_file_index = prepared_file_path.split("_")[-1].split(".")[0]
 
         # our scripts write their output files to this path
         script_output_file_name = (
-            f"output_{script_type}_via_{language}_{script_name}.txt"
+            f"output_{language}_{script_name}_{prepared_file_index}.txt"
         )
         script_output_file_path = f"{self.data_folder_path}/{script_output_file_name}"
 
@@ -142,7 +155,7 @@ class TestRunnerContexts:
 
         # construct ending call args
         docker_run_test_list += [
-            f"-e=INPUT_PATH={self.data_folder_path}/{script_type}_input.txt",
+            f"-e=INPUT_PATH={input_file_path}",
             f"-e=OUTPUT_PATH={script_output_file_path}",
             config["dockerImage"],
             *script_invoker,
@@ -170,14 +183,14 @@ class TestRunnerContexts:
                 if snippet_start_line != 0:
                     raise Exception(
                         f'Found multiple "{self.snippet_start_text}" lines in {script_relative_path}.\n'
-                        f"The text with found on lines {snippet_start_line - snippet_start_line_offset + 1} and {idx + 1}."
+                        f"The lines were {snippet_start_line - snippet_start_line_offset + 1} and {idx + 1}."
                     )
                 snippet_start_line = idx + 3
             if self.snippet_end_text in line:
                 if snippet_end_line != 0:
                     raise Exception(
                         f'Found multiple "{self.snippet_end_text}" lines in {script_relative_path}.\n'
-                        f"The text with found on lines {snippet_end_line + snippet_end_line_offset + 1} and {idx + 1}."
+                        f"The lines were {snippet_end_line + snippet_end_line_offset + 1} and {idx + 1}."
                     )
                 snippet_end_line = idx - snippet_end_line_offset
         if snippet_start_line == 0:
@@ -195,10 +208,12 @@ class TestRunnerContexts:
             script_name=script_name,
             docker_pull=docker_pull,
             docker_run_test=docker_run_test,
+            script_type=script_type,
             script_relative_path=script_relative_path,
             script_name_with_file_type=script_name_with_file_type,
             script_output_file_path=script_output_file_path,
             script_output_file_name=script_output_file_name,
+            input_file_path=input_file_path,
             prepared_file_path=prepared_file_path,
             snippet_start_line=snippet_start_line,
             snippet_end_line=snippet_end_line,
@@ -244,19 +259,24 @@ class TestRunner:
                 # report timing
                 # we round the number so humans dont over-index on small differences
                 print(
-                    f'\t⏱  script "{ctx.script_relative_path}" run for {round(end_time - start_time, 2)} seconds'
+                    f"\t⏱  {ctx.script_relative_path} on {ctx.input_file_path} "
+                    f"ran for {round(end_time - start_time, 2)} seconds"
                 )
 
                 # check if the script invoke failed
                 if output.exited != 0:
                     self.set_success_status(False)
-                    print(f'\t🔴 script "{ctx.script_relative_path}" failed, reason:')
+                    print(
+                        f"\t🔴 {ctx.script_relative_path} on {ctx.input_file_path} failed, reason:"
+                    )
                     print(f'\t\t the exit code "{output.exited}" was not 0')
 
                 # check if the output file was created
                 if not os.path.exists(ctx.script_output_file_path):
                     self.set_success_status(False)
-                    print(f'\t🔴 script "{ctx.script_relative_path}" failed, reason:')
+                    print(
+                        f"\t🔴 {ctx.script_relative_path} on {ctx.input_file_path} failed, reason:"
+                    )
                     print(
                         f"\t\t the output {ctx.script_output_file_name} file was not created"
                     )
@@ -266,14 +286,18 @@ class TestRunner:
                     ctx.prepared_file_path, ctx.script_output_file_path
                 ):
                     self.set_success_status(True)
-                    print(f'\t🟢 script "{ctx.script_relative_path}" succeeded')
+                    print(
+                        f"\t🟢 {ctx.script_relative_path} on {ctx.input_file_path} succeeded"
+                    )
 
                 # check if the output file does not match the prepared file
                 if os.path.exists(ctx.script_output_file_path) and not filecmp.cmp(
                     ctx.prepared_file_path, ctx.script_output_file_path
                 ):
                     self.set_success_status(False)
-                    print(f'\t🔴 script "{ctx.script_relative_path}" failed, reason:')
+                    print(
+                        f"\t🔴 {ctx.script_relative_path} on {ctx.input_file_path} failed, reason:"
+                    )
                     print(
                         f"\t\t output file {ctx.script_output_file_name} has does not match the prepared file"
                     )
@@ -370,4 +394,4 @@ def test(ctx: invoke.Context, language, input_script):
 
 @invoke.task
 def clean(ctx: invoke.Context):
-    ctx.run("git clean -fdx ./data/*")
+    ctx.run("git clean -fdx ./data/output_*")
