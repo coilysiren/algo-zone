@@ -18,10 +18,12 @@ pip install invoke pyyaml
 Then run any of the algos:
 
 ```bash
-invoke test $language $script
-invoke test python insertion_sort
-invoke test python any # "any" is a wildcard keyword
-invoke test rust   selection_sort
+invoke test $language $script         $data_index
+invoke test python    insertion_sort  any
+invoke test python    any             any
+invoke test rust      selection_sort  any
+invoke test python    sql             any
+invoke test python    sql             0
 ```
 
 You will get output like so:
