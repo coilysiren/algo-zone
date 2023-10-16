@@ -49,6 +49,7 @@ class TestRunnerContext:
     script_output_file_name: str
     input_file_path: str
     prepared_file_path: str
+    prepared_file_type: str
     snippet_start_line: int
     snippet_end_line: int
 
@@ -228,6 +229,7 @@ class TestRunnerContexts:
             script_output_file_name=script_output_file_name,
             input_file_path=input_file_path,
             prepared_file_path=prepared_file_path,
+            prepared_file_type=prepared_file_type,
             snippet_start_line=snippet_start_line,
             snippet_end_line=snippet_end_line,
         )
@@ -287,18 +289,28 @@ class TestRunner:
                     self.set_success_status(False)
                     print(f"\t🔴 {ctx.script_relative_path} on {ctx.input_file_path} failed, reason:")
                     print(f"\t\t the output {ctx.script_output_file_name} file was not created")
+                    continue
+
+                # check if the output file matches the prepared file, when both files are json
+                if ctx.prepared_file_type == "json":
+                    with open(ctx.prepared_file_path, "r", encoding="utf-8") as reader:
+                        prepared_file_data = json.load(reader)
+                    with open(ctx.script_output_file_path, "r", encoding="utf-8") as reader:
+                        script_output_file_data = json.load(reader)
+                    if prepared_file_data == script_output_file_data:
+                        self.set_success_status(True)
+                        print(f"\t🟢 {ctx.script_relative_path} on {ctx.input_file_path} succeeded")
+                    else:
+                        self.set_success_status(False)
+                        print(f"\t🔴 {ctx.script_relative_path} on {ctx.input_file_path} failed, reason:")
+                        print(f"\t\t output file {ctx.script_output_file_name} has does not match the prepared file")
+                    continue
 
                 # check if the output file matches the prepared file
-                if os.path.exists(ctx.script_output_file_path) and filecmp.cmp(
-                    ctx.prepared_file_path, ctx.script_output_file_path
-                ):
+                if filecmp.cmp(ctx.prepared_file_path, ctx.script_output_file_path):
                     self.set_success_status(True)
                     print(f"\t🟢 {ctx.script_relative_path} on {ctx.input_file_path} succeeded")
-
-                # check if the output file does not match the prepared file
-                if os.path.exists(ctx.script_output_file_path) and not filecmp.cmp(
-                    ctx.prepared_file_path, ctx.script_output_file_path
-                ):
+                else:
                     self.set_success_status(False)
                     print(f"\t🔴 {ctx.script_relative_path} on {ctx.input_file_path} failed, reason:")
                     print(f"\t\t output file {ctx.script_output_file_name} has does not match the prepared file")
