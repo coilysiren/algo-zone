@@ -49,6 +49,7 @@ class TestRunnerContext:
     script_output_file_name: str
     input_file_path: str
     prepared_file_path: str
+    prepared_file_type: str
     snippet_start_line: int
     snippet_end_line: int
 
@@ -65,7 +66,7 @@ class TestRunnerContexts:
     snippet_start_text = "business logic start"
     snippet_end_text = "business logic end"
 
-    def __init__(self, language) -> None:
+    def __init__(self, language, input_data_index) -> None:
         # get the language specific config
         with open(f"{self.base_directory}/config.yml", "r", encoding="utf-8") as obj:
             data = obj.read()
@@ -79,18 +80,24 @@ class TestRunnerContexts:
             script_type = script_path.split("/")[-1].split("_")[0]
 
             # ignore helpers, metadata files, etc
-            if config.get("ignoreFiles") and script_path.split("/")[-1] in config.get(
-                "ignoreFiles"
-            ):
+            if config.get("ignoreFiles") and script_path.split("/")[-1] in config.get("ignoreFiles"):
                 continue
 
             # ignore directories, generally compiled code
             if not os.path.isfile(script_path):
                 continue
 
-            for input_file_path in glob.glob(
-                f"{self.data_folder_path}/{script_type}_input_*.txt"
-            ):
+            for input_file_path in glob.glob(f"{self.data_folder_path}/{script_type}_input_*"):
+                # given "data/sort_input_1.txt" => return "1"
+                input_file_index = input_file_path.split("_")[-1].split(".")[0]
+
+                # skip this input file if it's not the one we want to run
+                if inputs_are_truthy_and_different(
+                    clean_string(input_file_index),
+                    clean_string(input_data_index),
+                ):
+                    continue
+
                 # generate a context for this particular script
                 if ctx := self.generate(language, config, script_path, input_file_path):
                     self.ctxs.append(ctx)
@@ -114,17 +121,28 @@ class TestRunnerContexts:
         # this path is used in various places later
         script_relative_path = f"./src/{language}/{script_name_with_file_type}"
 
-        # get the path of the file that's been prepared in advance
-        # and has the output we would be expecting from out script
-        prepared_file_path = input_file_path.replace("input", "output")
+        # given "./data/sql_input_1.txt" => return "data/sql_output_1"
+        partial_output_file_path = "." + input_file_path.replace("input", "output").split(".")[1]
+
+        # get the actual output file path
+        potentional_output_file_paths = glob.glob(f"{partial_output_file_path}.*")
+        if len(potentional_output_file_paths) == 0:
+            raise Exception(f"could not find output file for input file {input_file_path}")
+        if len(potentional_output_file_paths) > 1:
+            raise Exception(
+                f"Found multiple output files for a single input file: {potentional_output_file_paths}. "
+                f"The input file was {input_file_path}."
+            )
+        prepared_file_path = potentional_output_file_paths[0]
 
         # given "data/sort_input_1.txt" => return "1"
         prepared_file_index = prepared_file_path.split("_")[-1].split(".")[0]
 
+        # given "data/sql_output_0.json" => return "json"
+        prepared_file_type = prepared_file_path.split(".")[-1]
+
         # our scripts write their output files to this path
-        script_output_file_name = (
-            f"output_{language}_{script_name}_{prepared_file_index}.txt"
-        )
+        script_output_file_name = f"output_{language}_{script_name}_{prepared_file_index}.{prepared_file_type}"
         script_output_file_path = f"{self.data_folder_path}/{script_output_file_name}"
 
         # script_invoker is command that we run in a subprocess to invoke our script
@@ -194,13 +212,9 @@ class TestRunnerContexts:
                     )
                 snippet_end_line = idx - snippet_end_line_offset
         if snippet_start_line == 0:
-            raise Exception(
-                f'could not find the text "{self.snippet_start_text}" in {script_relative_path}'
-            )
+            raise Exception(f'could not find the text "{self.snippet_start_text}" in {script_relative_path}')
         if snippet_end_line == 0:
-            raise Exception(
-                f'could not find the text "{self.snippet_end_text}" in {script_relative_path}'
-            )
+            raise Exception(f'could not find the text "{self.snippet_end_text}" in {script_relative_path}')
 
         # return the fully constructed context
         return TestRunnerContext(
@@ -215,6 +229,7 @@ class TestRunnerContexts:
             script_output_file_name=script_output_file_name,
             input_file_path=input_file_path,
             prepared_file_path=prepared_file_path,
+            prepared_file_type=prepared_file_type,
             snippet_start_line=snippet_start_line,
             snippet_end_line=snippet_end_line,
         )
@@ -226,9 +241,9 @@ class TestRunner:
     invoke: invoke.Context
     ctxs: TestRunnerContexts
 
-    def __init__(self, _invoke, language) -> None:
+    def __init__(self, _invoke, language, input_data_index) -> None:
         self.invoke = _invoke
-        self.ctxs = TestRunnerContexts(language)
+        self.ctxs = TestRunnerContexts(language, input_data_index)
 
     def run_tests(self, input_script):
         # run every test
@@ -266,41 +281,39 @@ class TestRunner:
                 # check if the script invoke failed
                 if output.exited != 0:
                     self.set_success_status(False)
-                    print(
-                        f"\t🔴 {ctx.script_relative_path} on {ctx.input_file_path} failed, reason:"
-                    )
+                    print(f"\t🔴 {ctx.script_relative_path} on {ctx.input_file_path} failed, reason:")
                     print(f'\t\t the exit code "{output.exited}" was not 0')
 
                 # check if the output file was created
                 if not os.path.exists(ctx.script_output_file_path):
                     self.set_success_status(False)
-                    print(
-                        f"\t🔴 {ctx.script_relative_path} on {ctx.input_file_path} failed, reason:"
-                    )
-                    print(
-                        f"\t\t the output {ctx.script_output_file_name} file was not created"
-                    )
+                    print(f"\t🔴 {ctx.script_relative_path} on {ctx.input_file_path} failed, reason:")
+                    print(f"\t\t the output {ctx.script_output_file_name} file was not created")
+                    continue
+
+                # check if the output file matches the prepared file, when both files are json
+                if ctx.prepared_file_type == "json":
+                    with open(ctx.prepared_file_path, "r", encoding="utf-8") as reader:
+                        prepared_file_data = json.load(reader)
+                    with open(ctx.script_output_file_path, "r", encoding="utf-8") as reader:
+                        script_output_file_data = json.load(reader)
+                    if prepared_file_data == script_output_file_data:
+                        self.set_success_status(True)
+                        print(f"\t🟢 {ctx.script_relative_path} on {ctx.input_file_path} succeeded")
+                    else:
+                        self.set_success_status(False)
+                        print(f"\t🔴 {ctx.script_relative_path} on {ctx.input_file_path} failed, reason:")
+                        print(f"\t\t output file {ctx.script_output_file_name} has does not match the prepared file")
+                    continue
 
                 # check if the output file matches the prepared file
-                if os.path.exists(ctx.script_output_file_path) and filecmp.cmp(
-                    ctx.prepared_file_path, ctx.script_output_file_path
-                ):
+                if filecmp.cmp(ctx.prepared_file_path, ctx.script_output_file_path):
                     self.set_success_status(True)
-                    print(
-                        f"\t🟢 {ctx.script_relative_path} on {ctx.input_file_path} succeeded"
-                    )
-
-                # check if the output file does not match the prepared file
-                if os.path.exists(ctx.script_output_file_path) and not filecmp.cmp(
-                    ctx.prepared_file_path, ctx.script_output_file_path
-                ):
+                    print(f"\t🟢 {ctx.script_relative_path} on {ctx.input_file_path} succeeded")
+                else:
                     self.set_success_status(False)
-                    print(
-                        f"\t🔴 {ctx.script_relative_path} on {ctx.input_file_path} failed, reason:"
-                    )
-                    print(
-                        f"\t\t output file {ctx.script_output_file_name} has does not match the prepared file"
-                    )
+                    print(f"\t🔴 {ctx.script_relative_path} on {ctx.input_file_path} failed, reason:")
+                    print(f"\t\t output file {ctx.script_output_file_name} has does not match the prepared file")
 
             # catch any errors, mark the test as failed, and continue
             except Exception as exc:
@@ -325,9 +338,7 @@ class TestRunner:
                     "r",
                     encoding="utf-8",
                 ) as reader:
-                    snippet = reader.readlines()[
-                        ctx.snippet_start_line : ctx.snippet_end_line
-                    ]
+                    snippet = reader.readlines()[ctx.snippet_start_line : ctx.snippet_end_line]
 
                 # write the snippet
                 with open(
@@ -347,9 +358,7 @@ class TestRunner:
                 # Check if there are unsaved changes on the snippets.
                 if output.exited != 0:
                     self.set_success_status(False)
-                    print(
-                        f"🔴 snippets/{ctx.language}/{ctx.script_name_with_file_type} has uncommitted changes"
-                    )
+                    print(f"🔴 snippets/{ctx.language}/{ctx.script_name_with_file_type} has uncommitted changes")
 
             # catch any errors, mark the test as failed, and continue
             except Exception as exc:
@@ -383,10 +392,10 @@ class TestRunner:
 
 
 @invoke.task
-def test(ctx: invoke.Context, language, input_script):
+def test(ctx: invoke.Context, language, input_script, input_data_index):
     # language is the programming language to run scripts in
     # input_script is the name of a script you want to run
-    runner = TestRunner(ctx, language)
+    runner = TestRunner(ctx, language, input_data_index)
     runner.run_tests(input_script)
     runner.generate_snippets(input_script)
     runner.show_results()
