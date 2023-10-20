@@ -1,4 +1,5 @@
 # builtin packages
+import unittest
 import filecmp
 import glob
 import os
@@ -163,6 +164,8 @@ class TestRunnerContexts:
         docker_run_test_list = [
             "docker",
             "run",
+            "--rm",
+            f"--name={language}",
             f"--volume={self.base_directory}:/workdir",
             "-w=/workdir",
         ]
@@ -297,13 +300,9 @@ class TestRunner:
                         prepared_file_data = json.load(reader)
                     with open(ctx.script_output_file_path, "r", encoding="utf-8") as reader:
                         script_output_file_data = json.load(reader)
-                    if prepared_file_data == script_output_file_data:
-                        self.set_success_status(True)
-                        print(f"\t🟢 {ctx.script_relative_path} on {ctx.input_file_path} succeeded")
-                    else:
-                        self.set_success_status(False)
-                        print(f"\t🔴 {ctx.script_relative_path} on {ctx.input_file_path} failed, reason:")
-                        print(f"\t\t output file {ctx.script_output_file_name} has does not match the prepared file")
+                    unittest.TestCase().assertDictEqual(prepared_file_data, script_output_file_data)
+                    self.set_success_status(True)
+                    print(f"\t🟢 {ctx.script_relative_path} on {ctx.input_file_path} succeeded")
                     continue
 
                 # check if the output file matches the prepared file
@@ -392,12 +391,13 @@ class TestRunner:
 
 
 @invoke.task
-def test(ctx: invoke.Context, language, input_script, input_data_index):
+def test(ctx: invoke.Context, language, input_script, input_data_index, snippets=False):
     # language is the programming language to run scripts in
     # input_script is the name of a script you want to run
     runner = TestRunner(ctx, language, input_data_index)
     runner.run_tests(input_script)
-    runner.generate_snippets(input_script)
+    if snippets:
+        runner.generate_snippets(input_script)
     runner.show_results()
 
 
