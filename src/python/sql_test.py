@@ -9,31 +9,68 @@ import helpers
 ########################
 
 
+import dataclasses
 import json
+import typing
 
 
-class SQL:
-    __data: dict = {}
+@dataclasses.dataclass(frozen=True)
+class SQLState:
+    state: dict
 
-    def __init__(self) -> None:
-        self.clear_data()
+    def read_table_meta(self, table_name: str) -> dict:
+        return self.state.get(table_name, {}).get("metadata", {})
 
-    def clear_data(self):
-        self.__data = {}
+    def read_table_rows(self, table_name: str) -> dict:
+        return self.state.get(table_name, {}).get("rows", {})
 
-    def read_data_table(self, table_name: str) -> dict:
-        return self.__data.get(table_name, {})
-
-    def read_information_schema_tables(self) -> list[dict]:
-        return [data["metadata"] for data in self.__data.values()]
+    def read_information_schema(self) -> list[dict]:
+        return [data["metadata"] for data in self.state.values()]
 
     def write_table_meta(self, table_name: str, data: dict):
-        self.__data[table_name] = data
+        state = self.state
+        table = state.get(table_name, {})
+        metadata = table.get("metadata", {})
+        metadata.update(data)
+        table["metadata"] = metadata
+        state[table_name] = table
+        return self.__class__(state)
 
-    def write_table_data(self, table_name: str, data: dict):
-        self.__data[table_name]["data"] = data
+    def write_table_rows(self, table_name: str, data: dict):
+        state = self.state
+        table = state.get(table_name, {})
+        rows = table.get("rows", [])
+        rows.append(data)
+        table["rows"] = rows
+        state[table_name] = table
+        return self.__class__(state)
 
-    def create_table(self, *args, table_schema="public") -> dict:
+
+class SQLType:
+    @staticmethod
+    def varchar(data) -> str:
+        data_str = str(data).strip()
+        if data_str.startswith("'") or data_str.startswith('"'):
+            data_str = data_str[1:]
+        if data_str.endswith("'") or data_str.endswith('"'):
+            data_str = data_str[:-1]
+        return data_str
+
+    @staticmethod
+    def int(data) -> int:
+        return int(data.strip())
+
+
+sql_type_map = {
+    "VARCHAR": SQLType.varchar,
+    "INT": SQLType.int,
+}
+
+
+class SQLFunctions:
+    @staticmethod
+    def create_table(state: SQLState, *args, table_schema="public") -> typing.Tuple[list, SQLState]:
+        output: list[dict] = []
         table_name = args[2]
 
         # get columns
@@ -47,29 +84,44 @@ class SQL:
             }
             # fmt: on
 
-        if self.read_data_table(table_name):
-            self.write_table_meta(
+        if not state.read_table_meta(table_name):
+            state = state.write_table_meta(
                 table_name,
                 {
-                    "metadata": {
-                        "table_name": table_name,
-                        "table_schema": table_schema,
-                        "colums": columns,
-                    }
+                    "table_name": table_name,
+                    "table_schema": table_schema,
+                    "colums": columns,
                 },
             )
-        return {}
+        return (output, state)
 
-    create_table.sql = "CREATE TABLE"
+    @staticmethod
+    def insert_into(state: SQLState, *args) -> typing.Tuple[list, SQLState]:
+        output: list[dict] = []
+        table_name = args[2]
 
-    def insert_into(self, *args) -> dict:
-        print(f"args: {args}")
-        pass
+        values_index = None
+        for i, arg in enumerate(args):
+            if arg == "VALUES":
+                values_index = i
 
-    insert_into.sql = "INSERT INTO"
+        keys = " ".join(args[3:values_index]).replace("(", "").replace(")", "").split(",")
+        keys = [key.strip() for key in keys]
+        values = " ".join(args[values_index + 1 :]).replace("(", "").replace(")", "").split(",")
+        values = [value.strip() for value in values]
+        key_value_map = dict(zip(keys, values))
 
-    def select(self, *args) -> dict:
-        output = {}
+        data = {}
+        if metadata := state.read_table_meta(table_name):
+            for key, value in key_value_map.items():
+                data[key] = sql_type_map[metadata["colums"][key]](value)
+            state = state.write_table_rows(table_name, data)
+
+        return (output, state)
+
+    @staticmethod
+    def select(state: SQLState, *args) -> typing.Tuple[list, SQLState]:
+        output: list[dict] = []
 
         from_index = None
         where_index = None
@@ -81,59 +133,56 @@ class SQL:
 
         # get select keys by getting the slice of args before FROM
         select_keys = " ".join(args[1:from_index]).split(",")
+        select_keys = [key.strip() for key in select_keys]
 
         # get where keys by getting the slice of args after WHERE
         from_value = args[from_index + 1]
 
-        # consider "information_schema.tables" a special case until
-        # we figure out why its so different from the others
+        # `information_schema.tables` is a special case
         if from_value == "information_schema.tables":
-            target = self.read_information_schema_tables()
+            data = state.read_information_schema()
         else:
-            target = self.read_data_table(from_value)
+            data = state.read_table_rows(from_value)
 
-        # fmt: off
-        output = {
-            key: [
-                value for data in target
-                for key, value in data.items()
-                if key in select_keys
-            ]
-            for key in select_keys
-        }
-        # fmt: on
+        output = []
+        for datum in data:
+            # fmt: off
+            output.append({
+                key: datum.get(key)
+                for key in select_keys
+            })
+            # fmt: on
 
-        return output
+        return (output, state)
 
-    select.sql = "SELECT"
 
-    sql_map = {
-        create_table.sql: create_table,
-        select.sql: select,
-        insert_into.sql: insert_into,
-    }
+sql_function_map: dict[str, typing.Callable] = {
+    "CREATE TABLE": SQLFunctions.create_table,
+    "SELECT": SQLFunctions.select,
+    "INSERT INTO": SQLFunctions.insert_into,
+}
 
-    def run(self, input_sql: list[str]) -> list[str]:
-        output = {}
 
-        # remove comments
-        input_sql = [line.strip() for line in input_sql if not line.startswith("--")]
+def run_sql(input_sql: list[str]) -> list[str]:
+    output = []
+    state = SQLState(state={})
 
-        # re-split on semi-colons
-        input_sql = " ".join(input_sql).split(";")
+    # remove comments
+    input_sql = [line.strip() for line in input_sql if not line.startswith("--")]
 
-        # iterate over each line of sql
-        for line in input_sql:
-            words = line.split(" ")
-            for i in reversed(range(len(words) + 1)):
-                key = " ".join(words[:i]).strip()
-                # print(f'key: "{key}"')
-                if func := self.sql_map.get(key):
-                    # print(f'running "{func.__name__}" with {words}')
-                    output = func(self, *[word for word in words if word])
-                    break
+    # re-split on semi-colons
+    input_sql = " ".join(input_sql).split(";")
 
-        return [json.dumps(output)]
+    # iterate over each line of sql
+    for line in input_sql:
+        words = line.split(" ")
+        for i in reversed(range(len(words) + 1)):
+            key = " ".join(words[:i]).strip()
+            if func := sql_function_map.get(key):
+                output, state = func(state, *[word for word in words if word])
+                break
+
+    return [json.dumps(output)]
 
 
 ######################
@@ -141,4 +190,4 @@ class SQL:
 ######################
 
 if __name__ == "__main__":
-    helpers.run(SQL().run)
+    helpers.run(run_sql)

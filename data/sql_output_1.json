@@ -1,3 +1,1 @@
-{
-  "table_name": ["city", "town"]
-}
+[{ "table_name": "city" }, { "table_name": "town" }]
