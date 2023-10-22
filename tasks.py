@@ -300,7 +300,7 @@ class TestRunner:
                         prepared_file_data = json.load(reader)
                     with open(ctx.script_output_file_path, "r", encoding="utf-8") as reader:
                         script_output_file_data = json.load(reader)
-                    unittest.TestCase().assertDictEqual(prepared_file_data, script_output_file_data)
+                    unittest.TestCase().assertListEqual(prepared_file_data, script_output_file_data)
                     self.set_success_status(True)
                     print(f"\t🟢 {ctx.script_relative_path} on {ctx.input_file_path} succeeded")
                     continue
