@@ -271,7 +271,8 @@ class TestRunner:
 
                 # run the script
                 start_time = time.time()
-                output = self.invoke.run(ctx.docker_run_test, echo=True, pty=True)
+                print(f"docker run ... {ctx.language} {ctx.script_relative_path}")
+                output = self.invoke.run(ctx.docker_run_test, echo=False, pty=True)
                 end_time = time.time()
 
                 # report timing
