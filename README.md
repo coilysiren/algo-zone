@@ -31,18 +31,18 @@ You will get output like so:
 ```bash
 $ invoke test python any
 
-docker run ...
-  ⏱  ./src/python/sort_builtin.py on ./data/sort_input_0.txt ran for 0.5 seconds
+docker run ... python ./src/python/sort_builtin.py
+  ⏱  ./src/python/sort_builtin.py on ./data/sort_input_0.txt ran for 0.52 seconds
   🟢 ./src/python/sort_builtin.py on ./data/sort_input_0.txt succeeded
-docker run ...
-  ⏱  ./src/python/sort_bubble_sort.py on ./data/sort_input_0.txt ran for 0.51 seconds
-  🟢 ./src/python/sort_bubble_sort.py on ./data/sort_input_0.txt succeeded
-docker run ...
-  ⏱  ./src/python/sort_selection_sort.py on ./data/sort_input_0.txt ran for 0.58 seconds
-  🟢 ./src/python/sort_selection_sort.py on ./data/sort_input_0.txt succeeded
-docker run ...
-  ⏱  ./src/python/sort_insertion_sort.py on ./data/sort_input_0.txt ran for 0.52 seconds
-  🟢 ./src/python/sort_insertion_sort.py on ./data/sort_input_0.txt succeeded
+docker run ... python ./src/python/sql_test.py
+  ⏱  ./src/python/sql_test.py on ./data/sql_input_2.sql ran for 0.75 seconds
+  🟢 ./src/python/sql_test.py on ./data/sql_input_2.sql succeeded
+docker run ... python ./src/python/sql_test.py
+  ⏱  ./src/python/sql_test.py on ./data/sql_input_3.sql ran for 0.75 seconds
+  🟢 ./src/python/sql_test.py on ./data/sql_input_3.sql succeeded
+docker run ... python ./src/python/sql_test.py
+  ⏱  ./src/python/sql_test.py on ./data/sql_input_1.sql ran for 0.74 seconds
+  🟢 ./src/python/sql_test.py on ./data/sql_input_1.sql succeeded
 
 ✨ script run success ✨
 ```
