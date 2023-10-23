@@ -107,7 +107,7 @@ module SQLFunctions
 
     raise 'FROM not found' if from_index.nil?
 
-    select_keys = args[1...from_index].join(' ').split(',').map(&:strip)
+    select_keys = args[1...from_index].join(' ').split(',').map {|s| s.gsub(/[()]/, '')}.map(&:strip)
     from_value = args[from_index + 1]
 
     data = if from_value == 'information_schema.tables'

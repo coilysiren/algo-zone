@@ -1,0 +1,9 @@
+[
+  {
+    "worker": "CREATE TABLE",
+    "args": [
+      "city",
+      ["name", "VARCHAR", "population", "INT", "timezone", "INT"]
+    ]
+  }
+]

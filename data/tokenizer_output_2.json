@@ -1,0 +1,6 @@
+[
+  {
+    "worker": "SELECT",
+    "args": ["name", "FROM", "city"]
+  }
+]

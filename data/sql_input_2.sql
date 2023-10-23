@@ -14,8 +14,9 @@ VALUES ('San Francisco', 852469, -8);
 INSERT INTO city (name, population, timezone)
 VALUES ('New York', 8405837, -5);
 
-SELECT
+SELECT (
     name,
     population,
     timezone
+)
 FROM city;

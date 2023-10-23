@@ -11,7 +11,10 @@ import helpers
 
 import dataclasses
 import json
+import re
 import typing
+
+import tokenizer_script
 
 
 @dataclasses.dataclass(frozen=True)
@@ -50,10 +53,8 @@ class SQLType:
     @staticmethod
     def varchar(data) -> str:
         data_str = str(data).strip()
-        if data_str.startswith("'") or data_str.startswith('"'):
-            data_str = data_str[1:]
-        if data_str.endswith("'") or data_str.endswith('"'):
-            data_str = data_str[:-1]
+        data_str = re.sub(r'^["\']', "", data_str)  # leading ' or "
+        data_str = re.sub(r'["\']$', "", data_str)  # trailing ' or "
         return data_str
 
     @staticmethod
@@ -61,26 +62,20 @@ class SQLType:
         return int(data.strip())
 
 
-sql_type_map = {
-    "VARCHAR": SQLType.varchar,
-    "INT": SQLType.int,
-}
-
-
 class SQLFunctions:
     @staticmethod
     def create_table(state: SQLState, *args, table_schema="public") -> typing.Tuple[list, SQLState]:
         output: list[dict] = []
-        table_name = args[2]
+        table_name = args[0]
 
         # get columns
         columns = {}
-        columns_str = " ".join(args[3:]).replace("(", "").replace(")", "").strip()
+        columns_str = args[1]
         if columns_str:
             # fmt: off
             columns = {
-                column.strip().split(" ")[0]: column.strip().split(" ")[1]
-                for column in columns_str.split(",")
+                columns_str[i]: columns_str[i + 1]
+                for i in range(0, len(columns_str), 2)
             }
             # fmt: on
 
@@ -98,23 +93,19 @@ class SQLFunctions:
     @staticmethod
     def insert_into(state: SQLState, *args) -> typing.Tuple[list, SQLState]:
         output: list[dict] = []
-        table_name = args[2]
-
-        values_index = None
-        for i, arg in enumerate(args):
-            if arg == "VALUES":
-                values_index = i
-        if values_index is None:
-            raise ValueError("VALUES not found")
-
-        keys = " ".join(args[3:values_index]).replace("(", "").replace(")", "").split(",")
-        keys = [key.strip() for key in keys]
-        values = " ".join(args[values_index + 1 :]).replace("(", "").replace(")", "").split(",")
-        values = [value.strip() for value in values]
+        table_name = args[0]
+        keys = args[1]
+        values = args[3]
         key_value_map = dict(zip(keys, values))
 
+        sql_type_map = {
+            "VARCHAR": SQLType.varchar,
+            "INT": SQLType.int,
+        }
+
         data = {}
-        if metadata := state.read_table_meta(table_name):
+        metadata = state.read_table_meta(table_name)
+        if metadata:
             for key, value in key_value_map.items():
                 data[key] = sql_type_map[metadata["colums"][key]](value)
             state = state.write_table_rows(table_name, data)
@@ -124,23 +115,8 @@ class SQLFunctions:
     @staticmethod
     def select(state: SQLState, *args) -> typing.Tuple[list, SQLState]:
         output: list[dict] = []
-
-        from_index = None
-        where_index = None
-        for i, arg in enumerate(args):
-            if arg == "FROM":
-                from_index = i
-            if arg == "WHERE":
-                where_index = i
-        if from_index is None:
-            raise ValueError("FROM not found")
-
-        # get select keys by getting the slice of args before FROM
-        select_keys = " ".join(args[1:from_index]).split(",")
-        select_keys = [key.strip() for key in select_keys]
-
-        # get where keys by getting the slice of args after WHERE
-        from_value = args[from_index + 1]
+        select_columns = args[0] if isinstance(args[0], list) else [args[0]]
+        from_value = args[2]
 
         # `information_schema.tables` is a special case
         if from_value == "information_schema.tables":
@@ -153,38 +129,28 @@ class SQLFunctions:
             # fmt: off
             output.append({
                 key: datum.get(key)
-                for key in select_keys
+                for key in select_columns
             })
             # fmt: on
 
         return (output, state)
 
 
-sql_function_map: dict[str, typing.Callable] = {
-    "CREATE TABLE": SQLFunctions.create_table,
-    "SELECT": SQLFunctions.select,
-    "INSERT INTO": SQLFunctions.insert_into,
-}
-
-
 def run_sql(input_sql: list[str]) -> list[str]:
     output = []
     state = SQLState(state={})
-
-    # remove comments
-    input_sql = [line.strip() for line in input_sql if not line.startswith("--")]
-
-    # re-split on semi-colons
-    input_sql = " ".join(input_sql).split(";")
+    sql_tokenizer = tokenizer_script.SQLTokenizer(
+        {
+            "CREATE TABLE": SQLFunctions.create_table,
+            "INSERT INTO": SQLFunctions.insert_into,
+            "SELECT": SQLFunctions.select,
+        }
+    )
+    sql_token_list = sql_tokenizer.tokenize_sql(input_sql)
 
     # iterate over each line of sql
-    for line in input_sql:
-        words = line.split(" ")
-        for i in reversed(range(len(words) + 1)):
-            key = " ".join(words[:i]).strip()
-            if func := sql_function_map.get(key):
-                output, state = func(state, *[word for word in words if word])
-                break
+    for sql_tokens in sql_token_list:
+        output, state = sql_tokens.worker_func(state, *sql_tokens.args)
 
     return [json.dumps(output)]
 
