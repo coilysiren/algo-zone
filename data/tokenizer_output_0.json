@@ -1,17 +1,10 @@
 [
-  {
-    "worker": "CREATE TABLE",
-    "args": ["town"]
-  },
+  { "worker": "CREATE TABLE", "args": ["town", []] },
   {
     "worker": "CREATE TABLE",
     "args": [
       "city",
-      [
-        ["name", "VARCHAR"],
-        ["population", "INT"],
-        ["timezone", "INT"]
-      ]
+      ["name", "VARCHAR", "population", "INT", "timezone", "INT"]
     ]
   },
   {
@@ -19,19 +12,22 @@
     "args": [
       "city",
       ["name", "population", "timezone"],
+      "VALUES",
       ["'San Francisco'", "852469", "-8"]
     ]
   },
   {
     "worker": "INSERT INTO",
-    "args": ["city", ["name", "population"], ["'New York'", "8405837"]]
+    "args": [
+      "city",
+      ["name", "population"],
+      "VALUES",
+      ["'New York'", "8405837"]
+    ]
   },
   {
     "worker": "SELECT",
-    "args": [["name", "population", "timezone"], "city"]
+    "args": [["name", "population", "timezone"], "FROM", "city"]
   },
-  {
-    "worker": "SELECT",
-    "args": ["name", "city"]
-  }
+  { "worker": "SELECT", "args": ["name", "FROM", "city"] }
 ]

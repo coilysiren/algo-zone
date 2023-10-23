@@ -77,12 +77,7 @@ class SQLTokenizer:
                     if DEBUG:
                         print(f"at letter: {letter}, starting a word")
                     word_start = k
-                elif (
-                    (string_start[0] is not None)
-                    and (letter == string_start[1])
-                    and (sentence[k - 1] != "\\")
-                    and (inside_list)
-                ):
+                elif (letter == string_start[1]) and (sentence[k - 1] != "\\") and (inside_list):
                     if DEBUG:
                         print(f"at letter: {letter}, ending string: {sentence[string_start[0]:k+1]}")
                     string = sentence[string_start[0] : k + 1]
@@ -133,6 +128,10 @@ class SQLTokenizer:
                     inside_list = True
                     args_list[i].append([])
                     word_start = None
+                elif (inside_list) and (letter in ")"):
+                    if DEBUG:
+                        print(f"at letter: {letter}, ending list")
+                    inside_list = False
                 elif word_start is not None:
                     if DEBUG:
                         print(f"at letter: {letter}, inside of a word: {sentence[word_start:k]}")
