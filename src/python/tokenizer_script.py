@@ -11,7 +11,7 @@ import os
 import typing
 
 
-DEBUG = bool(int(os.getenv("DEBUG")))
+DEBUG = bool(int(os.getenv("DEBUG", "0")))
 
 
 @dataclasses.dataclass(frozen=True)
@@ -59,12 +59,12 @@ class SQLTokenizer:
                 raise ValueError(f"Unknown worker function: {this_worker_str}")
 
         # tokenize args
-        args_list = []
+        args_list: list[list] = []
         for i, sentence in enumerate(args_strs):
             args_list.append([])
-            word_start = 0
+            word_start: int | None = 0
             inside_list = False
-            string_start = (None, None)
+            string_start: tuple[int | None, str | None] = (None, None)
             for k, letter in enumerate(sentence):
                 if (string_start[0] is None) and (letter in ["'", '"']):
                     if DEBUG:
