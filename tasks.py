@@ -32,7 +32,7 @@ def clean_string(inp):
     """remove unwanted characters from a string"""
     if inp:
         inp = inp.lower().strip()
-        for element in ["-", "_", "test", "sort"]:
+        for element in ["-", "_", "test", "script", "sort"]:
             inp = inp.replace(element, "")
     return inp
 

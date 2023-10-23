@@ -1,0 +1,37 @@
+[
+  {
+    "worker": "CREATE TABLE",
+    "args": ["town"]
+  },
+  {
+    "worker": "CREATE TABLE",
+    "args": [
+      "city",
+      [
+        ["name", "VARCHAR"],
+        ["population", "INT"],
+        ["timezone", "INT"]
+      ]
+    ]
+  },
+  {
+    "worker": "INSERT INTO",
+    "args": [
+      "city",
+      ["name", "population", "timezone"],
+      ["'San Francisco'", "852469", "-8"]
+    ]
+  },
+  {
+    "worker": "INSERT INTO",
+    "args": ["city", ["name", "population"], ["'New York'", "8405837"]]
+  },
+  {
+    "worker": "SELECT",
+    "args": [["name", "population", "timezone"], "city"]
+  },
+  {
+    "worker": "SELECT",
+    "args": ["name", "city"]
+  }
+]

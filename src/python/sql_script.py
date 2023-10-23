@@ -11,7 +11,10 @@ import helpers
 
 import dataclasses
 import json
+import re
 import typing
+
+import tokenizer_script
 
 
 @dataclasses.dataclass(frozen=True)
@@ -50,21 +53,13 @@ class SQLType:
     @staticmethod
     def varchar(data) -> str:
         data_str = str(data).strip()
-        if data_str.startswith("'") or data_str.startswith('"'):
-            data_str = data_str[1:]
-        if data_str.endswith("'") or data_str.endswith('"'):
-            data_str = data_str[:-1]
+        data_str = re.sub(r'^["\']', "", data_str)  # leading ' or "
+        data_str = re.sub(r'["\']$', "", data_str)  # trailing ' or "
         return data_str
 
     @staticmethod
     def int(data) -> int:
         return int(data.strip())
-
-
-sql_type_map = {
-    "VARCHAR": SQLType.varchar,
-    "INT": SQLType.int,
-}
 
 
 class SQLFunctions:
@@ -100,6 +95,11 @@ class SQLFunctions:
         output: list[dict] = []
         table_name = args[2]
 
+        sql_type_map = {
+            "VARCHAR": SQLType.varchar,
+            "INT": SQLType.int,
+        }
+
         values_index = None
         for i, arg in enumerate(args):
             if arg == "VALUES":
@@ -114,7 +114,8 @@ class SQLFunctions:
         key_value_map = dict(zip(keys, values))
 
         data = {}
-        if metadata := state.read_table_meta(table_name):
+        metadata = state.read_table_meta(table_name)
+        if metadata:
             for key, value in key_value_map.items():
                 data[key] = sql_type_map[metadata["colums"][key]](value)
             state = state.write_table_rows(table_name, data)
@@ -160,31 +161,21 @@ class SQLFunctions:
         return (output, state)
 
 
-sql_function_map: dict[str, typing.Callable] = {
-    "CREATE TABLE": SQLFunctions.create_table,
-    "SELECT": SQLFunctions.select,
-    "INSERT INTO": SQLFunctions.insert_into,
-}
-
-
 def run_sql(input_sql: list[str]) -> list[str]:
     output = []
     state = SQLState(state={})
-
-    # remove comments
-    input_sql = [line.strip() for line in input_sql if not line.startswith("--")]
-
-    # re-split on semi-colons
-    input_sql = " ".join(input_sql).split(";")
+    sql_tokenizer = tokenizer_script.SQLTokenizer(
+        {
+            "CREATE TABLE": SQLFunctions.create_table,
+            "INSERT INTO": SQLFunctions.insert_into,
+            "SELECT": SQLFunctions.select,
+        }
+    )
+    sql_token_list = sql_tokenizer.tokenize_sql(input_sql)
 
     # iterate over each line of sql
-    for line in input_sql:
-        words = line.split(" ")
-        for i in reversed(range(len(words) + 1)):
-            key = " ".join(words[:i]).strip()
-            if func := sql_function_map.get(key):
-                output, state = func(state, *[word for word in words if word])
-                break
+    for sql_tokens in sql_token_list:
+        output, state = sql_tokens.worker_func(state, sql_tokens.args)
 
     return [json.dumps(output)]
 
