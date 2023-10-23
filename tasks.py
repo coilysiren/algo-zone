@@ -62,12 +62,15 @@ class TestRunnerContext:
 class TestRunnerContexts:
     base_directory = os.getcwd()
     data_folder_path = "./data"
+    debug = False
     ctxs: list[TestRunnerContext] = []
     # We use these strings to mark the start and end of the important part of our scripts
     snippet_start_text = "business logic start"
     snippet_end_text = "business logic end"
 
-    def __init__(self, language, input_data_index) -> None:
+    def __init__(self, language, input_data_index, debug=False) -> None:
+        self.debug = debug
+
         # get the language specific config
         with open(f"{self.base_directory}/config.yml", "r", encoding="utf-8") as obj:
             data = obj.read()
@@ -176,6 +179,7 @@ class TestRunnerContexts:
 
         # construct ending call args
         docker_run_test_list += [
+            f"-e=DEBUG={1 if self.debug else 0}",
             f"-e=INPUT_PATH={input_file_path}",
             f"-e=OUTPUT_PATH={script_output_file_path}",
             config["dockerImage"],
@@ -244,9 +248,9 @@ class TestRunner:
     invoke: invoke.Context
     ctxs: TestRunnerContexts
 
-    def __init__(self, _invoke, language, input_data_index) -> None:
+    def __init__(self, _invoke, language, input_data_index, debug=False) -> None:
         self.invoke = _invoke
-        self.ctxs = TestRunnerContexts(language, input_data_index)
+        self.ctxs = TestRunnerContexts(language, input_data_index, debug=debug)
 
     def run_tests(self, input_script):
         # run every test
@@ -392,10 +396,10 @@ class TestRunner:
 
 
 @invoke.task
-def test(ctx: invoke.Context, language, input_script, input_data_index, snippets=False):
+def test(ctx: invoke.Context, language, input_script, input_data_index, snippets=False, debug=False):
     # language is the programming language to run scripts in
     # input_script is the name of a script you want to run
-    runner = TestRunner(ctx, language, input_data_index)
+    runner = TestRunner(ctx, language, input_data_index, debug=debug)
     runner.run_tests(input_script)
     if snippets:
         runner.generate_snippets(input_script)

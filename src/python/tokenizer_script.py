@@ -7,10 +7,11 @@ import helpers
 
 import dataclasses
 import json
+import os
 import typing
 
 
-DEBUG = True
+DEBUG = bool(int(os.getenv("DEBUG")))
 
 
 @dataclasses.dataclass(frozen=True)
@@ -56,10 +57,6 @@ class SQLTokenizer:
                     break
             if this_worker_str is None:
                 raise ValueError(f"Unknown worker function: {this_worker_str}")
-
-        print(f"worker_strs: {worker_strs}")
-        print(f"args_strs: {args_strs}")
-        print("\n")
 
         # tokenize args
         args_list = []
@@ -138,9 +135,6 @@ class SQLTokenizer:
                 else:
                     if DEBUG:
                         print(f"at letter: {letter}")
-
-        print("\n")
-        print(f"args_list: {args_list}")
 
         return [
             SQLTokens(

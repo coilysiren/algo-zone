@@ -66,16 +66,16 @@ class SQLFunctions:
     @staticmethod
     def create_table(state: SQLState, *args, table_schema="public") -> typing.Tuple[list, SQLState]:
         output: list[dict] = []
-        table_name = args[2]
+        table_name = args[0]
 
         # get columns
         columns = {}
-        columns_str = " ".join(args[3:]).replace("(", "").replace(")", "").strip()
+        columns_str = args[1]
         if columns_str:
             # fmt: off
             columns = {
-                column.strip().split(" ")[0]: column.strip().split(" ")[1]
-                for column in columns_str.split(",")
+                columns_str[i]: columns_str[i + 1]
+                for i in range(0, len(columns_str), 2)
             }
             # fmt: on
 
@@ -93,25 +93,15 @@ class SQLFunctions:
     @staticmethod
     def insert_into(state: SQLState, *args) -> typing.Tuple[list, SQLState]:
         output: list[dict] = []
-        table_name = args[2]
+        table_name = args[0]
+        keys = args[1]
+        values = args[3]
+        key_value_map = dict(zip(keys, values))
 
         sql_type_map = {
             "VARCHAR": SQLType.varchar,
             "INT": SQLType.int,
         }
-
-        values_index = None
-        for i, arg in enumerate(args):
-            if arg == "VALUES":
-                values_index = i
-        if values_index is None:
-            raise ValueError("VALUES not found")
-
-        keys = " ".join(args[3:values_index]).replace("(", "").replace(")", "").split(",")
-        keys = [key.strip() for key in keys]
-        values = " ".join(args[values_index + 1 :]).replace("(", "").replace(")", "").split(",")
-        values = [value.strip() for value in values]
-        key_value_map = dict(zip(keys, values))
 
         data = {}
         metadata = state.read_table_meta(table_name)
@@ -125,23 +115,8 @@ class SQLFunctions:
     @staticmethod
     def select(state: SQLState, *args) -> typing.Tuple[list, SQLState]:
         output: list[dict] = []
-
-        from_index = None
-        where_index = None
-        for i, arg in enumerate(args):
-            if arg == "FROM":
-                from_index = i
-            if arg == "WHERE":
-                where_index = i
-        if from_index is None:
-            raise ValueError("FROM not found")
-
-        # get select keys by getting the slice of args before FROM
-        select_keys = " ".join(args[1:from_index]).split(",")
-        select_keys = [key.strip() for key in select_keys]
-
-        # get where keys by getting the slice of args after WHERE
-        from_value = args[from_index + 1]
+        select_columns = args[0] if isinstance(args[0], list) else [args[0]]
+        from_value = args[2]
 
         # `information_schema.tables` is a special case
         if from_value == "information_schema.tables":
@@ -154,7 +129,7 @@ class SQLFunctions:
             # fmt: off
             output.append({
                 key: datum.get(key)
-                for key in select_keys
+                for key in select_columns
             })
             # fmt: on
 
@@ -175,7 +150,7 @@ def run_sql(input_sql: list[str]) -> list[str]:
 
     # iterate over each line of sql
     for sql_tokens in sql_token_list:
-        output, state = sql_tokens.worker_func(state, sql_tokens.args)
+        output, state = sql_tokens.worker_func(state, *sql_tokens.args)
 
     return [json.dumps(output)]
 
