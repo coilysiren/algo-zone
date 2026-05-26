@@ -1,0 +1,11 @@
+commands: {}
+
+catalog:
+  kind: Component
+  type: research
+  system: personal
+  owner: kai
+  lifecycle: experimental
+  dependsOn: []
+  providesApis: []
+  description: "Workshop for algorithms and data-structure puzzles."
