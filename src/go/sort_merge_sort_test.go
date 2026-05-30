@@ -4,13 +4,10 @@ import (
 	"testing"
 )
 
-//////////////////////////
 // business logic start //
-//////////////////////////
 
-// merge sort!
-//
-// docs: https://leetcode.com/explore/learn/card/recursion-ii/470/divide-and-conquer/2868/
+// merge sort - https://en.wikipedia.org/wiki/Merge_sort
+// docs: leetcode.com recursion-ii/divide-and-conquer card
 
 func MergeSort(inputList []string) (sortedList []string) {
 
@@ -78,9 +75,7 @@ func merge(left []string, right []string) (result []string) {
 	return result
 }
 
-////////////////////////
 // business logic end //
-////////////////////////
 
 func TestMergeSort(t *testing.T) {
 	t.Run("test", func(t *testing.T) {

@@ -2,9 +2,7 @@
 
 require 'json'
 
-########################
 # business logic start #
-########################
 
 class SQLState
   attr_reader :state
@@ -151,9 +149,7 @@ def run_sql(input_sql)
   [output.to_json]
 end
 
-######################
 # business logic end #
-######################
 
 if __FILE__ == $PROGRAM_NAME
   input_file_path = ENV['INPUT_PATH']

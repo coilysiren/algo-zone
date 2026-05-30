@@ -3,9 +3,7 @@ use std::fs;
 use std::fs::File;
 use std::io::Write;
 
-//////////////////////////
 // business logic start //
-//////////////////////////
 
 fn do_sorting(input_list: Vec<&str>) -> Vec<&str> {
     return bubble_sort(input_list);
@@ -45,9 +43,7 @@ fn do_sorting_round(input_list: Vec<&str>) -> (Vec<&str>, bool) {
     return (output_list, is_sorted);
 }
 
-////////////////////////
 // business logic end //
-////////////////////////
 
 // 👇🏽 copy pasted helpers
 

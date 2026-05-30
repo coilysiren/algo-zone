@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
-########################
-# business logic start #
-########################
+# business logic start
+# bubble sort - https://en.wikipedia.org/wiki/Bubble_sort
 
 def do_sorting(input_list)
   bubble_sort(input_list)
@@ -40,9 +39,7 @@ def do_sorting_round(input_list)
   [output_list, is_sorted]
 end
 
-######################
-# business logic end #
-######################
+# business logic end
 
 if __FILE__ == $PROGRAM_NAME
   input_file_path = ENV['INPUT_PATH']

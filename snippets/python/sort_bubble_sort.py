@@ -1,9 +1,5 @@
-# bubble sort!
-#
-# docs: https://en.wikipedia.org/wiki/Bubble_sort
-#
-# bubble sort steps through a list, comparing adjacent elements and swapping them if they
-# are in the wrong order. it passes through the list repeatedly until the list is sorted
+# bubble sort - https://en.wikipedia.org/wiki/Bubble_sort
+# compares adjacent elements, swapping out-of-order pairs, repeating until sorted
 
 
 def do_sorting(input_list):

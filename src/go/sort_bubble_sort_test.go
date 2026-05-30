@@ -4,16 +4,10 @@ import (
 	"testing"
 )
 
-//////////////////////////
 // business logic start //
-//////////////////////////
 
-// bubble sort!
-//
-// docs: https://en.wikipedia.org/wiki/Bubble_sort
-//
-// bubble sort steps through a list, comparing adjacent elements and swapping them if they
-// are in the wrong order. it passes through the list repeatedly until the list is sorted
+// bubble sort - https://en.wikipedia.org/wiki/Bubble_sort
+// steps through the list, swapping adjacent out-of-order pairs, repeating until sorted
 
 // bubble_sort is the top level function responsible for ... bubble sorting!
 func bubbleSort(inputList []string) (outputList []string) {
@@ -42,12 +36,8 @@ func doSortingRound(inputList []string) (outputList []string, isSorted bool) {
 			// if this element is less than the previous element then swap their order
 			visitedElements := outputList[:index-1]
 			previousElement := outputList[index-1]
-			// append a list of
-			//	- all the list elements we've visited already
-			//	- the current element
-			//	- the previous element
-			// which has the effect of swapping the order of the current and previous
-			// elements, while also keeping all of the visited elements in place
+			// rebuild as visited + current + previous, swapping the pair
+			// while keeping the already-visited elements in place
 			outputList = append(visitedElements, element, previousElement)
 			isSorted = false
 		} else {
@@ -59,9 +49,7 @@ func doSortingRound(inputList []string) (outputList []string, isSorted bool) {
 	return outputList, isSorted
 }
 
-////////////////////////
 // business logic end //
-////////////////////////
 
 func TestBubbleSort(t *testing.T) {
 	t.Run("test", func(t *testing.T) {

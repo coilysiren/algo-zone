@@ -1,10 +1,5 @@
-// insertion sort!
-//
-// docs: https://en.wikipedia.org/wiki/Insertion_sort
-//
-// Insertion sort steps through an input list, using it to grow an output list.
-// On every step, it sorts the current element into its proper location on the
-// output list.It continues until the input list is empty.
+// insertion sort - https://en.wikipedia.org/wiki/Insertion_sort
+// steps through the input, growing a sorted output by inserting each element.
 
 func insertionSort(inputList []string) (outputList []string) {
 

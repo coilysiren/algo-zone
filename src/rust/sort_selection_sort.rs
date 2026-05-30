@@ -3,17 +3,10 @@ use std::fs;
 use std::fs::File;
 use std::io::Write;
 
-//////////////////////////
 // business logic start //
-//////////////////////////
 
-// selection sort!
-//
+// selection sort - repeatedly find smallest unsorted element and append it to output
 // docs: https://en.wikipedia.org/wiki/Selection_sort
-//
-// Selection sort looks through every element an input list, and finds the smallest element.
-// That element is then appended to the end of an output list. Which it reaches the end
-// of the input list, all of the output elements will be sorted.
 
 fn do_sorting(input_list: Vec<&str>) -> Vec<&str> {
     return selection_sort(input_list);
@@ -45,9 +38,7 @@ fn find_smallest_index(input_list: &Vec<&str>) -> usize {
     return smallest_index;
 }
 
-////////////////////////
 // business logic end //
-////////////////////////
 
 // 👇🏽 copy pasted helpers
 

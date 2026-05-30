@@ -3,9 +3,7 @@ use std::fs;
 use std::fs::File;
 use std::io::Write;
 
-//////////////////////////
 // business logic start //
-//////////////////////////
 
 fn do_sorting(input_list: Vec<&str>) -> Vec<&str> {
     let mut output_list = input_list;
@@ -13,9 +11,7 @@ fn do_sorting(input_list: Vec<&str>) -> Vec<&str> {
     return output_list;
 }
 
-////////////////////////
 // business logic end //
-////////////////////////
 
 // 👇🏽 copy pasted helpers
 

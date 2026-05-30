@@ -1,8 +1,6 @@
 import helpers
 
-########################
 # business logic start #
-########################
 
 
 import dataclasses
@@ -39,9 +37,7 @@ class SQLTokenizer:
         args_strs = []
         for line in sql:
             this_worker_str = None
-            # We sort the SQL function map by its key length, longest first.
-            # This is a low complexity way to ensure that we can match, for example,
-            # both `SET SESSION AUTHORIZATION` and `SET`.
+            # sort keys longest-first so `SET SESSION AUTHORIZATION` beats `SET`
             # fmt: off
             sql_function_map_ordered_keys = sorted([
                 key
@@ -145,9 +141,7 @@ class SQLTokenizer:
             for worker_str, worker_func, args_list in zip(worker_strs, worker_funcs, args_list)
         ]
 
-    ######################
     # business logic end #
-    ######################
 
     def tokenize_sql_to_json(self, sql: list[str]) -> list[str]:
         return [

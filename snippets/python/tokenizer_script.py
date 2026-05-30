@@ -33,9 +33,7 @@ class SQLTokenizer:
         args_strs = []
         for line in sql:
             this_worker_str = None
-            # We sort the SQL function map by its key length, longest first.
-            # This is a low complexity way to ensure that we can match, for example,
-            # both `SET SESSION AUTHORIZATION` and `SET`.
+            # Sort keys longest-first so `SET SESSION AUTHORIZATION` matches before `SET`.
             # fmt: off
             sql_function_map_ordered_keys = sorted([
                 key

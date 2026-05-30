@@ -149,15 +149,10 @@ class TestRunnerContexts:
         script_output_file_name = f"output_{language}_{script_name}_{prepared_file_index}.{prepared_file_type}"
         script_output_file_path = f"{self.data_folder_path}/{script_output_file_name}"
 
-        # script_invoker is command that we run in a subprocess to invoke our script
-        # it needs to be split on spaces since subprocess.call excepts a list as input
-        # whenever we aren't using the shell=True arguement
+        # split on spaces since subprocess.call wants a list when shell=True is unset
         script_invoker = config["scriptInvoker"].split(" ")
 
-        # script_to_invoke is the literal script name that we pass to the invoker
-        # we assume that invokers accept paths by default (eg. script_path)
-        # and that other invokers want script names (eg. script_name)
-        # the useShortScriptName config value controls this behavior
+        # invokers take paths by default; useShortScriptName switches to bare names
         if config.get("useShortScriptName", False) is False:
             script_to_invoke = script_relative_path
         else:
@@ -196,9 +191,7 @@ class TestRunnerContexts:
         with open(script_relative_path, "r", encoding="utf-8") as obj:
             script_contents = obj.readlines()
 
-        # find the start and end lines of the script
-        # the start line is the location of the start text, plus 3 lines
-        # the end line is the location of the end text, minus 3 lines
+        # find the snippet bounds: start = start-text line + 3, end = end-text line - 3
         snippet_start_line = 0
         snippet_start_line_offset = 3
         snippet_end_line = 0
@@ -267,9 +260,8 @@ class TestRunner:
                 if os.path.isfile(ctx.script_output_file_path):
                     os.remove(ctx.script_output_file_path)
 
-                # Pull the docker image if we are in CI.
-                # We only do this in CI it helps with getting consistent timing in that context.
-                # When running locally, you get consistent timing by running the script twice.
+                # Pull the image only in CI for consistent timing.
+                # Locally, run the script twice to get consistent timing instead.
                 if os.getenv("CI"):
                     self.invoke.run(ctx.docker_pull, echo=True, pty=True)
 
@@ -299,7 +291,7 @@ class TestRunner:
                     print(f"\t\t the output {ctx.script_output_file_name} file was not created")
                     continue
 
-                # check if the output file matches the prepared file, when both files are json
+                # if both files are json, compare them as parsed json
                 if ctx.prepared_file_type == "json":
                     with open(ctx.prepared_file_path, "r", encoding="utf-8") as reader:
                         prepared_file_data = json.load(reader)
@@ -379,10 +371,8 @@ class TestRunner:
         )
 
     def set_success_status(self, status: bool):
-        # Only update the test success status if it wasnt already false.
-        # This function is useless if the test has already failed.
-        # It's here to make sure you don't accidentally mark a test as successful
-        # when it has already failed.
+        # Only update status if not already false, so a prior failure cant be
+        # accidentally overwritten by a later success.
         if self.__successful is not False:
             self.__successful = status
 

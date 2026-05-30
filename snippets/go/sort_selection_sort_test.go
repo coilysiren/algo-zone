@@ -1,11 +1,5 @@
-// selection sort!
-//
-// docs: https://en.wikipedia.org/wiki/Selection_sort
-//
-// Selection sort looks through every element an input list, and finds the
-// smallest element. That element is then appended to the end of an output list.
-// When it reaches the end of the input list, all of the output elements will
-// be sorted.
+// selection sort - https://en.wikipedia.org/wiki/Selection_sort
+// repeatedly find the smallest element and append it to the sorted output list.
 
 func selectionSort(inputList []string) (sortedList []string) {
 	unsortedList := inputList

@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-########################
 # business logic start #
-########################
 
 def do_sorting(input_list)
   output_list = input_list
@@ -10,9 +8,7 @@ def do_sorting(input_list)
   output_list
 end
 
-######################
 # business logic end #
-######################
 
 if __FILE__ == $PROGRAM_NAME
   input_file_path = ENV['INPUT_PATH']

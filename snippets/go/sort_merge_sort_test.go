@@ -1,5 +1,4 @@
 // merge sort!
-//
 // docs: https://leetcode.com/explore/learn/card/recursion-ii/470/divide-and-conquer/2868/
 
 func MergeSort(inputList []string) (sortedList []string) {

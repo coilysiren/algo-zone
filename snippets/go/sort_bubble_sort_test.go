@@ -1,9 +1,5 @@
-// bubble sort!
-//
-// docs: https://en.wikipedia.org/wiki/Bubble_sort
-//
-// bubble sort steps through a list, comparing adjacent elements and swapping them if they
-// are in the wrong order. it passes through the list repeatedly until the list is sorted
+// bubble sort - https://en.wikipedia.org/wiki/Bubble_sort
+// steps through the list swapping adjacent out-of-order pairs until fully sorted
 
 // bubble_sort is the top level function responsible for ... bubble sorting!
 func bubbleSort(inputList []string) (outputList []string) {
@@ -32,12 +28,8 @@ func doSortingRound(inputList []string) (outputList []string, isSorted bool) {
 			// if this element is less than the previous element then swap their order
 			visitedElements := outputList[:index-1]
 			previousElement := outputList[index-1]
-			// append a list of
-			//	- all the list elements we've visited already
-			//	- the current element
-			//	- the previous element
-			// which has the effect of swapping the order of the current and previous
-			// elements, while also keeping all of the visited elements in place
+			// rebuild as visited + current + previous, swapping the two
+			// while keeping every already-visited element in place
 			outputList = append(visitedElements, element, previousElement)
 			isSorted = false
 		} else {

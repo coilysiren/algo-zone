@@ -1,16 +1,10 @@
 import helpers
 
 
-########################
 # business logic start #
-########################
 
-# bubble sort!
-#
-# docs: https://en.wikipedia.org/wiki/Bubble_sort
-#
-# bubble sort steps through a list, comparing adjacent elements and swapping them if they
-# are in the wrong order. it passes through the list repeatedly until the list is sorted
+# bubble sort - https://en.wikipedia.org/wiki/Bubble_sort
+# steps through the list swapping adjacent out-of-order elements, repeating until sorted
 
 
 def do_sorting(input_list):
@@ -60,9 +54,7 @@ def do_sorting_round(input_list: list[str]) -> (list[str], bool):
     return output_list, is_sorted
 
 
-######################
 # business logic end #
-######################
 
 if __name__ == "__main__":
     helpers.run(do_sorting)

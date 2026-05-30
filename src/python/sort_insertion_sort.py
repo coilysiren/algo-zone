@@ -1,17 +1,10 @@
 import helpers
 
 
-########################
 # business logic start #
-########################
 
-# insertion sort!
-#
-# docs: https://en.wikipedia.org/wiki/Insertion_sort
-#
-# insertion sort steps through an input list, using it to grow an output list.
-# on every step, it inserts the current element into its proper location on the output list.
-# it continues until the input list is empty.
+# insertion sort - https://en.wikipedia.org/wiki/Insertion_sort
+# grows an output list, inserting each input element into its proper location.
 
 
 def do_sorting(input_list):
@@ -43,9 +36,7 @@ def insert_element(input_list: list[str], element: str, index: int) -> list[str]
     return output_list
 
 
-######################
 # business logic end #
-######################
 
 if __name__ == "__main__":
     helpers.run(do_sorting)

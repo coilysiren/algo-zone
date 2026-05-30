@@ -4,17 +4,10 @@ import (
 	"testing"
 )
 
-//////////////////////////
 // business logic start //
-//////////////////////////
 
-// insertion sort!
-//
-// docs: https://en.wikipedia.org/wiki/Insertion_sort
-//
-// Insertion sort steps through an input list, using it to grow an output list.
-// On every step, it sorts the current element into its proper location on the
-// output list.It continues until the input list is empty.
+// insertion sort - https://en.wikipedia.org/wiki/Insertion_sort
+// Grows a sorted output list by inserting each input element into its place.
 
 func insertionSort(inputList []string) (outputList []string) {
 
@@ -43,9 +36,7 @@ func swapWithPrevious(list []string, idx int) []string {
 	return list
 }
 
-////////////////////////
 // business logic end //
-////////////////////////
 
 func TestInsertionSort(t *testing.T) {
 	t.Run("test", func(t *testing.T) {

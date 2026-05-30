@@ -1,10 +1,5 @@
-// selection sort!
-//
-// docs: https://en.wikipedia.org/wiki/Selection_sort
-//
-// Selection sort looks through every element an input list, and finds the smallest element.
-// That element is then appended to the end of an output list. Which it reaches the end
-// of the input list, all of the output elements will be sorted.
+// selection sort - https://en.wikipedia.org/wiki/Selection_sort
+// repeatedly find the smallest unsorted element and append it to the output list
 
 fn do_sorting(input_list: Vec<&str>) -> Vec<&str> {
     return selection_sort(input_list);

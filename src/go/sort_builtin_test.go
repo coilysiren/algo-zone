@@ -5,7 +5,6 @@ import (
 	"testing"
 )
 
-//////////////////////////
 // business logic start //
 //////////////////////////
 
@@ -15,7 +14,6 @@ func builtinSort(inputList []string) (outputList []string) {
 	return outputList
 }
 
-////////////////////////
 // business logic end //
 ////////////////////////
 

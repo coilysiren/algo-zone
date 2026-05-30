@@ -1,6 +1,5 @@
 var fs = require("fs");
 
-//////////////////////////
 // business logic start //
 //////////////////////////
 
@@ -40,7 +39,6 @@ function doSortingRound(inputList) {
   return outputList, isSorted;
 }
 
-////////////////////////
 // business logic end //
 ////////////////////////
 

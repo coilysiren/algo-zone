@@ -38,16 +38,13 @@ docker run ... python ./src/python/sql_test.py
   ⏱  ./src/python/sql_test.py on ./data/sql_input_2.sql ran for 0.75 seconds
   🟢 ./src/python/sql_test.py on ./data/sql_input_2.sql succeeded
 docker run ... python ./src/python/sql_test.py
-  ⏱  ./src/python/sql_test.py on ./data/sql_input_3.sql ran for 0.75 seconds
-  🟢 ./src/python/sql_test.py on ./data/sql_input_3.sql succeeded
-docker run ... python ./src/python/sql_test.py
   ⏱  ./src/python/sql_test.py on ./data/sql_input_1.sql ran for 0.74 seconds
   🟢 ./src/python/sql_test.py on ./data/sql_input_1.sql succeeded
 
 ✨ script run success ✨
 ```
 
-_(note: I will likely not bother to update the above example when the output changes in minor ways)_
+_(note: the example above may drift from real output)_
 
 ## New Languages
 
@@ -71,3 +68,11 @@ invoke test cobol insertion_sort
 Which will spin up a docker container for your brand new fancy language. The tests run inside that docker container. That docker container will be expecting a file as output, look at the existing language examples to get an idea of what this means.
 
 Overall you should expect this process to take a few hours. It's hard getting all these languages to play nice with each other!!!
+
+## See also
+
+- [AGENTS.md](AGENTS.md) - agent-facing operating rules.
+- [docs/FEATURES.md](docs/FEATURES.md) - inventory of what ships today.
+- [.coily/coily.yaml](.coily/coily.yaml) - allowlisted commands.
+
+Cross-reference convention from [coilysiren/agentic-os#59](https://github.com/coilysiren/agentic-os/issues/59).

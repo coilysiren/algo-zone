@@ -1,8 +1,6 @@
 var fs = require("fs");
 
-//////////////////////////
-// business logic start //
-//////////////////////////
+// business logic start
 
 function doSorting(inputList) {
   outputList = inputList;
@@ -10,9 +8,7 @@ function doSorting(inputList) {
   return outputList;
 }
 
-////////////////////////
-// business logic end //
-////////////////////////
+// business logic end
 
 // 👇🏽 copy pasted helpers
 

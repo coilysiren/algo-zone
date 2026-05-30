@@ -4,18 +4,10 @@ import (
 	"testing"
 )
 
-//////////////////////////
 // business logic start //
-//////////////////////////
 
-// selection sort!
-//
-// docs: https://en.wikipedia.org/wiki/Selection_sort
-//
-// Selection sort looks through every element an input list, and finds the
-// smallest element. That element is then appended to the end of an output list.
-// When it reaches the end of the input list, all of the output elements will
-// be sorted.
+// selection sort - repeatedly pick the smallest remaining element to build the output
+// https://en.wikipedia.org/wiki/Selection_sort
 
 func selectionSort(inputList []string) (sortedList []string) {
 	unsortedList := inputList
@@ -46,9 +38,7 @@ func removeIndex(inputList []string, index int) (outputList []string) {
 	return outputList
 }
 
-////////////////////////
 // business logic end //
-////////////////////////
 
 func TestSelectionSort(t *testing.T) {
 	t.Run("test", func(t *testing.T) {
