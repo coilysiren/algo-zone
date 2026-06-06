@@ -16,5 +16,4 @@ repos:
       - id: closes-issue
       - id: conventional-commit
       - id: trufflehog
-      - id: coily-trailer
   # END managed by agentic-os/scripts/apply-agentic-os-hooks.py
