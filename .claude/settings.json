@@ -10,13 +10,44 @@
         ],
         "matcher": "Bash"
       }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "command": "coily hook session-start",
+            "type": "command"
+          }
+        ]
+      }
     ]
   },
   "permissions": {
     "allow": [
       "Bash(cat:*)",
+      "Bash(coily docker:*)",
+      "Bash(coily ops aws:*)",
       "Bash(coily ops flyctl:*)",
       "Bash(coily ops gcloud:*)",
+      "Bash(coily ops gh:*)",
+      "Bash(coily ops kubectl:*)",
+      "Bash(coily ops mcporter:*)",
+      "Bash(coily ops netlify:*)",
+      "Bash(coily pkg brew:*)",
+      "Bash(coily pkg bun:*)",
+      "Bash(coily pkg bundle:*)",
+      "Bash(coily pkg cargo:*)",
+      "Bash(coily pkg gem:*)",
+      "Bash(coily pkg nix:*)",
+      "Bash(coily pkg npm:*)",
+      "Bash(coily pkg pip:*)",
+      "Bash(coily pkg pipx:*)",
+      "Bash(coily pkg pnpm:*)",
+      "Bash(coily pkg poetry:*)",
+      "Bash(coily pkg scoop:*)",
+      "Bash(coily pkg uv:*)",
+      "Bash(coily pkg yarn:*)",
+      "Bash(coily tailscale:*)",
       "Bash(coily:*)",
       "Bash(file:*)",
       "Bash(find:*)",
@@ -33,13 +64,11 @@
       "Bash(yq:*)"
     ],
     "deny": [
-      "Bash(flyctl:*)",
-      "Bash(gcloud:*)",
       "Bash(git clean -fd:*)",
       "Bash(git push --force:*)",
       "Bash(git push -f:*)",
       "Bash(git reset --hard:*)",
-      "Bash(mcporter:*)"
+      "Bash(ssh:*)"
     ]
   }
 }
