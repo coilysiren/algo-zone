@@ -64,6 +64,7 @@
       "Bash(yq:*)"
     ],
     "deny": [
+      "Bash(git -c:*)",
       "Bash(git clean -fd:*)",
       "Bash(git push --force:*)",
       "Bash(git push -f:*)",
