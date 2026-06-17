@@ -18,7 +18,7 @@ A workshop for figuring out algorithms and data-structure puzzles across many la
 
 ## Commands
 
-Route every dev command through coily, which reads [`.coily/coily.yaml`](.coily/coily.yaml). Run algorithms with `invoke test <language> <script> <data_index>` (see [README.md](README.md)).
+Route every dev command through ward, which reads [`.ward/ward.yaml`](.ward/ward.yaml) (run verbs with `ward exec <verb>`). Run algorithms with `invoke test <language> <script> <data_index>` (see [README.md](README.md)).
 
 ## Validation
 
@@ -45,6 +45,6 @@ No release artifact. Merging to `main` is the only "ship". There is no tag, pack
 
 - [README.md](README.md) - human-facing intro and quick start.
 - [docs/FEATURES.md](docs/FEATURES.md) - inventory of what ships today.
-- [.coily/coily.yaml](.coily/coily.yaml) - allowlisted commands.
+- [.coily/coily.yaml](.coily/coily.yaml) - allowlisted commands (run via `ward exec`).
 
 Cross-reference convention from [coilysiren/agentic-os#59](https://github.com/coilysiren/agentic-os/issues/59).
